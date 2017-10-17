@@ -28,7 +28,7 @@ $objPHPExcel->getActiveSheet()->getPageMargins()->setRight(0,70); //Derecha
 $objPHPExcel->getActiveSheet()->getPageMargins()->setLeft(0,70); //Izquierda
 
 $hoja = $objPHPExcel->getActiveSheet();
-$hoja->setTitle($estado_pagos[0]->Numero);
+$hoja->setTitle("Contrato ".$estado_pagos[0]->Numero);
 //Se indica el rango de filas que se van a repetir en el momento de imprimir. (Encabezado del reporte)
 $hoja->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(3);
 /**
@@ -197,7 +197,6 @@ $hoja->mergeCells("B{$fila}:C{$fila}");
 $hoja->setCellValue("B{$fila}", "Porcentaje");
 $hoja->setCellValue("D{$fila}", "=(D{$fila_Pagado}/D{$fila_Valor_Inicial})");
 
-//
 // Se modifican los encabezados del HTTP para indicar que se envia un archivo de Excel. SUMA(D12;-D13)
 header('Cache-Control: max-age=0');
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

@@ -75,6 +75,7 @@ echo form_hidden('id_contrato', $id_contrato);
                     echo form_submit(array('id' => 'guardar', 'name' => 'guardar'), 'Generar pago');
                     echo form_input(array('type' => 'button', 'name' => 'volver', 'id' => 'volver', 'value' => 'Regresar', 'onclick'=> 'history.back()'));
                     ?>
+                    <input type="button" value="Generar informe" style="background: green; color: white" onCLick="javascript:generar_informe()">
                 </div>
             </td>
         </tr>
@@ -125,6 +126,12 @@ echo form_fieldset_close();
 </table>
 
 <script type='text/javascript'>
+    function generar_informe()
+    {
+        // Se ejecuta el informe
+        window.location = "<?php echo site_url('informes/pagos'); ?>/<?php echo $id_contrato; ?>";
+    } // generar_informe
+
      $(document).ready(function(){
          /************************Scripts para las tablas************************/
         $('#example').dataTable({
