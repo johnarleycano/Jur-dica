@@ -76,7 +76,7 @@ Class Pago extends CI_Controller{
         //Mensajes que se muestran cuando no se supera la validaci&oacute;n
         $this->form_validation->set_message('required', '-%s no puede estar vac&iacute;o');
         $this->form_validation->set_message('numeric', '-%s no puede contener letras');
-        
+
         /*
          * Esta es la condición que ejecuta las reglas y no lo deja pasar. 
          * Si el método devuelve FALSE, la validación no se llevó corretamente
@@ -84,6 +84,11 @@ Class Pago extends CI_Controller{
         if($this->form_validation->run() == false){
             //Se imprime el mensaje de informaci&oacute;n
             $this->data['mensaje_alerta'] = "Faltan datos obligatorios por llenar";
+            $this->index();
+        // Se valida que el pago no supere el total del valor del contrato
+        }elseif(($this->input->post('valor_pagado') + $this->input->post('valor')) > $this->input->post('valor_total')){
+            //Se imprime el mensaje de informaci&oacute;n
+            $this->data['mensaje_error'] = "El pago por $".number_format($this->input->post('valor'), 0, '', '.')." no puede ser registrado debido a que supera el valor total del contrato ($".number_format($this->input->post('valor_total'), 0, '', '.').")." ;
             $this->index();
         }else{
             /*

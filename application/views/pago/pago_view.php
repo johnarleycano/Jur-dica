@@ -25,6 +25,11 @@ echo form_hidden('id_contrato', $id_contrato);
                     foreach ($estado_pagos as $estado):
                     echo form_hidden('numero_contrato', $estado->Numero);
                     ?>
+                    
+                    <!-- Campos ocultos con los valores pagado y total del contrato para validar que el siguiente pago no supere el total -->
+                    <input type="text" name="valor_total" value="<?php echo $estado->Valor_Inicial + $estado->Valor_Adiciones; ?>">
+                    <input type="text" name="valor_pagado" value="<?php echo $estado->Pagado; ?>">
+                    
                     <tr>
                         <td colspan="2" style="text-align: center"><b><u>Estado de pago del contrato <?php echo $estado->Numero; ?></u></b></th>
                     </tr>
