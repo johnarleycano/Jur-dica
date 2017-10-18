@@ -1,7 +1,7 @@
 <?php 
 //Atributos para el fieldset
 $fieldset = array('id' => 'fieldset', 'class' => 'fieldset');
-print_r($fieldset);
+// print_r($fieldset);
 //Se inicia el formulario
 echo form_open('contrato/agregar_contrato');
 ?>
