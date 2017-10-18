@@ -82,3 +82,7 @@ hr.vertical{width: 6px;background-color: #006600;height: 160px;border: 0px inset
     font-size: 18px !important;
     color:#4C7707 !important;
 }
+
+#example{
+	cursor: pointer;
+}

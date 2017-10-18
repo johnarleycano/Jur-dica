@@ -1,5 +1,5 @@
-<div id="form" class="container_11">
     <div class="titulos_formularios">Listado de contratos</div><br>
+<div id="form" class="container_11">
     <table cellpadding="0" cellspacing="0" border="" class="display" id="example" style="font-size: 13px;">
         <thead> 
             <tr style="text-align: center;"> 
@@ -67,9 +67,7 @@
             "bInfo": true,
             'fillSpace': true,
             "bAutoWidth": true,
-
-            //Este script establece un orden por cierta columna
-            "aaSorting": [[ 0, "asc" ]]
+            "stateSave": true,
         });
      });//Fin document.ready
 </script>

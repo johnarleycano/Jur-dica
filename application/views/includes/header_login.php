@@ -10,7 +10,7 @@
         <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/960.css" media="screen"/>
         <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/text.css" media="screen"/>
         <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/reset.css" media="screen"/>
-        <link rel="stylesheet" href="<?php echo base_url(); ?>css/demo_table_jui.css" type="text/css" />
+        <!-- <link rel="stylesheet" href="<?php //echo base_url(); ?>css/demo_table_jui.css" type="text/css" /> -->
 
         <!-- icono -->
         <link rel="shortcut icon" href="<?php echo base_url(); ?>img/favicon.ico" type="image/x-icon">
@@ -32,7 +32,7 @@
         <script type="text/javascript" src="<?php echo base_url(); ?>js/ui/jquery.ui.resizable.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>js/ui/jquery.effects.core.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery.bgiframe-2.1.2.js"></script>
-        <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery.dataTables.min.js"></script>
+        <!-- <script type="text/javascript" src="<?php //echo base_url(); ?>js/jquery.dataTables.min.js"></script> -->
 
         <div class="container_12">
             <!-- <div id="logo"></div> -->

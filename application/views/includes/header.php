@@ -10,7 +10,7 @@
         <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/960.css" media="screen"/>
         <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/text.css" media="screen"/>
         <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/reset.css" media="screen"/>
-        <link rel="stylesheet" href="<?php echo base_url(); ?>css/demo_table_jui.css" type="text/css" />
+        <link rel="stylesheet" href="<?php echo base_url(); ?>css/datatables.css" type="text/css" />
 
         <!-- Bootstrap -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -39,7 +39,7 @@
         <script type="text/javascript" src="<?php echo base_url(); ?>js/ui/jquery.ui.resizable.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>js/ui/jquery.effects.core.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery.bgiframe-2.1.2.js"></script>
-        <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="<?php echo base_url(); ?>js/datatables.js"></script>
 
 
         <div class="container_12">
