@@ -45,7 +45,7 @@ echo form_open('sesion/validar_login');
     </div><!--lateral izquierdo-->
     <div class="grid_1"><hr class="vertical"/></div><!--div central-->
     <div class="grid_5, titulos_login" align="center">Sistema para la Administracion <br>Juridica</div><!--lateral derecho-->  
-    <div id="logo-login"></div>  
+    <center><img src="<?php echo base_url().'img/logo.png'; ?>" style="width: 150px; text-align: center;"></center>
 </div>
 <script type="text/javascript">
     //Cuando el DOM este listo

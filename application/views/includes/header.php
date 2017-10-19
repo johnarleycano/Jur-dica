@@ -44,7 +44,7 @@
 
         <div class="container_12">
             <div id="titulo_logo">Sistema para la <br>Administracion Juridica</div>
-            <div id="logo"></div>
+            <center><img src="<?php echo base_url().'img/logo.png'; ?>" style="width: 120px; float: right; margin-right: 20px;"></center>
             <div>
             <!-- Ventana de mensajes --> 
                 <?php if (isset($mensaje_info)) { ?> 
