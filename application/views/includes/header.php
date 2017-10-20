@@ -85,9 +85,6 @@
                 <div id="menu-left"></div>
                 <div id="menu">
                     <ul>
-                        <li>
-                            <a href="<?php echo base_url(); ?>"><span></span></a>
-                        </li>
                         <?php if($this->session->userdata('Tipo') == true){ ?>
                         <li><a href="<?php echo site_url('inicio'); ?>"><span>Contratos</span></a>
                             <ul class="menuDrpDwn">
@@ -95,30 +92,31 @@
                                 <li><a href="<?php echo site_url('liquidacion'); ?>">Liquidar</a></li>
                             </ul>
                         </li>
-                        <li><a href="<?php echo site_url('inicio_demanda'); ?>"><span>Demandas</span></a>
+                        <!-- <li><a href="<?php // echo site_url('inicio_demanda'); ?>"><span>Demandas</span></a>
                             <ul class="menuDrpDwn">
-                                <li><a href="<?php echo site_url('demanda'); ?>">Nuevo</a></li>
+                                <li><a href="<?php // echo site_url('demanda'); ?>">Nuevo</a></li>
                             </ul>
                         </li>
                         <li><a href=""><span>Terceros</span></a>
                             <ul class="menuDrpDwn">
-                                <li><a href="<?php echo site_url('tercero'); ?>">Agregar</a></li>
-                                <li><a href="<?php echo site_url('tercero/ver'); ?>">Ver</a></li>                   
+                                <li><a href="<?php // echo site_url('tercero'); ?>">Agregar</a></li>
+                                <li><a href="<?php // echo site_url('tercero/ver'); ?>">Ver</a></li>                   
                             </ul>
                         </li>
+                         -->
                         <?php } ?>
+
+                        <li>
+                            <a href="#"><span>Administración</span></a>
+                            <ul class="menuDrpDwn">
+                                <li><a href="<?php echo site_url('auditoria'); ?>">Auditoría</a></li>
+                                <li><a href="<?php echo site_url('tercero/ver'); ?>">Terceros</a></li>
+                                <li><a href="<?php echo site_url('usuario'); ?>">Usuarios</a></li>
+                            </ul>
+                        </li>
+                        
                         <li>
                             <a href="<?php echo site_url('informes'); ?>"><span>Informes</span></a>
-                            <ul class="menuDrpDwn">
-                                <?php if ($this->session->userdata('Usuario') == 'jcano'){ ?>
-                                <li><a href="#">Administraci&oacute;n</a>
-                                    <ul>
-                                        <li><a href="<?php echo site_url('auditoria'); ?>">Gesti&oacute;n de auditor&iacute;a</a></li>
-                                        <li><a href="<?php echo site_url('usuario'); ?>">Usuario nuevo</a></li>
-                                    </ul>
-                                </li>
-                                <?php } ?>
-                            </ul>
                         </li>
                         <li>
                             <a href="<?php echo site_url('sesion/cerrar_sesion'); ?>"><span>Cerrar sesi&oacute;n (<?php echo $this->session->userdata('Usuario'); ?>)</span></a>

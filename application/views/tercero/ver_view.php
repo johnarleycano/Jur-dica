@@ -1,7 +1,10 @@
 <div id="form" class="container_12">
     <div class="grid_11">
         <div class="titulos_formularios">Listado de terceros</div><br>
-        <table cellpadding="0" cellspacing="0" border="" class="display" id="example" style="font-size: 15px;">
+        
+        <input type="button" value="Agregar tercero" style="float:right; margin-top: -50px;" onClick="javascript:crear_tercero()">
+
+        <table cellpadding="0" cellspacing="0" border="" class="display" id="example" style="font-size: 15px;" onClick="javascript:">
             <thead>
                 <tr>
                     <th class="primero">Tipo</th>
@@ -37,6 +40,12 @@
 </div>
 
 <script type='text/javascript'>
+    function crear_tercero()
+    {
+        // Se ejecuta el informe
+        window.location = "<?php echo site_url('tercero'); ?>";
+    } // crear_tercero
+
      $(document).ready(function(){
          /************************Scripts para las tablas************************/
         $('#example').dataTable({
