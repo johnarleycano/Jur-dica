@@ -21,10 +21,10 @@ Class Email extends CI_Controller{
     function __construct() {
         //con esta linea se hereda el constructor de la clase Controller
         parent::__construct();
-        //Se cargan los modelos
-        $this->load->model('email_model');
-        $this->load->model('contrato_model');
-        $this->load->model('pago_model');
+        
+        //Se cargan los modelos y librerías
+        $this->load->model(array('email_model', 'contrato_model', 'pago_model', 'auditoria_model'));
+        $this->load->library(array('email'));
     }//Fin construct()
     
     /**
@@ -34,14 +34,14 @@ Class Email extends CI_Controller{
      */
     function index(){
         /*
-         * Se llaman todos los m&eacute;todos para que se invoque autom&aacute;ticamente
+         * Se llaman todos los métodos para que se invoque automáticamente
          * todos los correos desde solo un lugar
          */
-        $this->_contratos_en_vencimiento();
-        $this->_contratos_vencidos();
-        $this->polizas_en_vencimiento();
-        $this->polizas_vencidas();
-        $this->pagos_excedidos();
+        // $this->contratos_en_vencimiento();
+        // $this->contratos_vencidos();
+        // $this->polizas_en_vencimiento();
+        // $this->polizas_vencidas();
+        // $this->pagos_excedidos();
         $this->no_acta_inicio();
     }//Fin index
     
@@ -50,116 +50,80 @@ Class Email extends CI_Controller{
      * 
      * @access	private
      */
-    function _contratos_en_vencimiento(){
+    function contratos_en_vencimiento(){
         //Se carga el modelo que lista los contratos en vencimiento
         $contratos = $this->email_model->contratos_en_vencimiento();
-        
-        /*
-         * Se construye la tabla que se va a enviar
-         */
-        /********************************tabla********************************/
-        $tabla = '<table border="1" bordercolor="white" cellspacing="0" width="100%">';
-        /********************************cabecera********************************/
-        $tabla .= '<thead border="1" bordercolor="white" style="background-color:#0B37B0; font-family:Tahoma; color: white; font-size: 13px;" width="100%">';
-        $tabla .= '<tr>';
-        $tabla .= '<th>Contrato</th>';
-        $tabla .= '<th>Objeto</th>';
-        $tabla .= '<th>Contratista</th>';
-        $tabla .= '<th>Fecha de vencimiento</th>';
-        $tabla .= '<th>D&iacute;as restantes</th>';
-        $tabla .= '</tr>';
-        $tabla .= '</thead>';
-        /********************************cuerpo********************************/
-        $tabla .= '<tbody style="font-family:Tahoma; font-size: 12px;">';
-            $contador = 0;
-            foreach($contratos as $contrato):
-                $contador++;
-                $tabla .= '<tr bordercolor="black">';
-                $tabla .= '<td align="right">'.$contrato->Numero.'&nbsp;</td>';
-                $tabla .= '<td>'.$contrato->Objeto.'</td>';
-                $tabla .= '<td>'.$contrato->Contratista.'</td>';
-                $tabla .= '<td width="12%">'.$contrato->Fecha_Vencimiento.'</td>';
-                $tabla .= '<td align="right">'.$contrato->Dias_Restantes.'</td>';
-                $tabla .= '</tr>';
-            endforeach;
-        $tabla .= '</tbody>';
-        $tabla .= '</table>';
-        
+
+        // Cuerpo
+        $cuerpo = "";
+
+        // Se recorren los contratos
+        foreach($contratos as $contrato):
+            $cuerpo .= "<fieldset style='border-color: #9FCB79'><legend style='border-color: #9FCB79'><b>Contrato $contrato->Numero ($contrato->Contratista)</b></legend>";
+            $cuerpo .= "$contrato->Objeto<br>";
+            $cuerpo .= "<b>Vence:</b> $contrato->Fecha_Vencimiento (faltan $contrato->Dias_Restantes días)<br>";
+            $cuerpo .= "</fieldset><br>";
+        endforeach;
+
         //Se define el asunto
-        $asunto = 'Contratos por vencerse';
+        $asunto = "Contratos por vencerse";
         
         //Se verifica, si hay datos se env&iacute;a la tabla
-        if($contador == 0){
-            $cuerpo = 
-            '<b>Listado de contratos por vencerse</b><br/><br/>A la fecha no hay contratos por vencerse.';
+        if(count($contratos) > 0){
+            $mensaje = "Este es el listado de los contratos que están a punto de vencerse (próximos cinco días): $cuerpo";
         }else{
-            $cuerpo = '<b>Listado de contratos por vencerse</b><br/><br/>Este es el listado de los '.$contador.' contratos que est&aacute;n por vencerse dentro de los pr&oacute;ximos cinco d&iacute;as:'.$tabla;
-        }
-        
-        //Se ejecuta el modelo que env&iaacute;
-        $this->email_model->_enviar_email($asunto, $cuerpo);
-        
-        //Mensaje de &eacute;xito
+            $mensaje = "A la fecha no hay contratos por vencerse dentro de los siguientes cinco días.";
+        } // if
+
+        // Se consultan los usuarios a los que se le enviará el correo
+        $usuarios = $this->auditoria_model->cargar_usuarios_correo(1);
+
+        //Se ejecuta el modelo que envía el correo
+        $this->email_model->enviar($usuarios, $asunto, $mensaje);
+
+        //Mensaje de éxito
         echo 'El mensaje de contratos por vencerse se ha enviado correctamente<br/>';
-    }//Fin _contratos_en_vencimiento()
-    
+    }//Fin contratos_en_vencimiento
+
     /**
      * Verifica los contratos que est&aacute;n vencidos.
      * 
      * @access	private
      */
-    function _contratos_vencidos(){
+    function contratos_vencidos(){
         //Se carga el modelo que trae los contratos vencidos
         $contratos = $this->email_model->contratos_vencidos();
-        
-        /*
-         * Se construye la tabla que se va a enviar
-         */
-        /********************************tabla********************************/
-        $tabla = '<table border="1" bordercolor="white" cellspacing="0" width="100%">';
-        /********************************cabecera********************************/
-        $tabla .= '<thead border="1" bordercolor="white" style="background-color:#0B37B0; font-family:Tahoma; color: white; font-size: 13px;" width="100%">';
-        $tabla .= '<tr>';
-        $tabla .= '<th>Contrato</th>';
-        $tabla .= '<th>Objeto</th>';
-        $tabla .= '<th>Contratista</th>';
-        $tabla .= '<th>Fecha de vencimiento</th>';
-        $tabla .= '<th>D&iacute;as vencido</th>';
-        $tabla .= '</tr>';
-        $tabla .= '</thead>';
-        /********************************cuerpo********************************/
-        $tabla .= '<tbody style="font-family:Tahoma; font-size: 12px;">';
-            $contador = 0;
-            foreach($contratos as $contrato):
-                $contador++;
-                $tabla .= '<tr bordercolor="black">';
-                $tabla .= '<td align="right">'.$contrato->Numero.'&nbsp;</td>';
-                $tabla .= '<td>'.$contrato->Objeto.'</td>';
-                $tabla .= '<td>'.$contrato->Contratista.'</td>';
-                $tabla .= '<td width="12%">'.$contrato->Fecha_Vencimiento.'</td>';
-                $tabla .= '<td align="right">'.$contrato->Dias_Vencidos.'</td>';
-                $tabla .= '</tr>';
-            endforeach;
-        $tabla .= '</tbody>';
-        $tabla .= '</table>';
-        
+
+        // Cuerpo
+        $cuerpo = "";
+
+        // Se recorren los contratos
+        foreach($contratos as $contrato):
+            $cuerpo .= "<fieldset style='border-color: #9FCB79'><legend style='border-color: #9FCB79'><b>Contrato $contrato->Numero ($contrato->Contratista)</b></legend>";
+            $cuerpo .= "$contrato->Objeto<br>";
+            $cuerpo .= "<b>Vencido desde:</b> $contrato->Fecha_Vencimiento ($contrato->Dias_Vencidos días)<br>";
+            $cuerpo .= "</fieldset><br>";
+        endforeach;
+
         //Se define el asunto
-        $asunto = 'Contratos vencidos';
+        $asunto = "Contratos vencidos";
         
         //Se verifica, si hay datos se env&iacute;a la tabla
-        if($contador == 0){
-            $cuerpo = 
-            '<b>Listado de contratos vencidos</b><br/><br/>A la fecha no hay contratos vencidos.';
+        if(count($contratos) > 0){
+            $mensaje = "Este es el listado de los contratos que están vencidos a la fecha: $cuerpo";
         }else{
-            $cuerpo = '<b>Listado de contratos vencidos</b><br/><br/>Este es el listado de los '.$contador.' contratos que est&aacute;n vencidos a la fecha:'.$tabla;
+            $mensaje =  "A la fecha no hay contratos vencidos.";
         }
         
-        //Se ejecuta el modelo que env&iaacute;
-        $this->email_model->_enviar_email($asunto, $cuerpo);
+        // Se consultan los usuarios a los que se le enviará el correo
+        $usuarios = $this->auditoria_model->cargar_usuarios_correo(2);
+
+        //Se ejecuta el modelo que envía el correo
+        $this->email_model->enviar($usuarios, $asunto, $mensaje);
         
-        //Mensaje de &eacute;xito
+        //Mensaje de éxito
         echo 'El mensaje de contratos vencidos se ha enviado correctamente<br/>';
-    }//Fin _contratos_vencidos()
+    }//Fin contratos_vencidos()
     
     /**
      * Verifica las p&oacute;lizas que est&eacute;n a punto de vencerse.
@@ -169,53 +133,33 @@ Class Email extends CI_Controller{
     function polizas_en_vencimiento(){
         //Se carga el modelo que se utilizar&aacute;
         $polizas = $this->email_model->polizas_en_vencimiento();
+
+        // Cuerpo
+        $cuerpo = "";
         
-        /*
-        * Se construye la tabla que se va a enviar
-        */
-        /********************************tabla********************************/
-        $tabla = '<table border="1" bordercolor="white" cellspacing="0" width="100%">';
-        /********************************cabecera********************************/
-        $tabla .= '<thead border="1" bordercolor="white" style="background-color:#0B37B0; font-family:Tahoma; color: white; font-size: 13px;" width="100%">';
-        $tabla .= '<tr>';
-        $tabla .= '<th>Contrato</th>';
-        $tabla .= '<th>P&oacute;liza</th>';
-        $tabla .= '<th>Objeto</th>';
-        $tabla .= '<th>Contratista</th>';
-        $tabla .= '<th>Fecha de vencimiento</th>';
-        $tabla .= '<th>D&iacute;as restantes</th>';
-        $tabla .= '</tr>';
-        $tabla .= '</thead>';
-        /********************************cuerpo********************************/
-        $tabla .= '<tbody style="font-family:Tahoma; font-size: 12px;">';
-            $contador = 0;
-            foreach ($polizas as $poliza):
-                $contador++;
-                $tabla .= '<tr bordercolor="black">';
-                $tabla .= '<td>'.$poliza->Numero.'</td>';
-                $tabla .= '<td>'.$poliza->Poliza_Tipo.'</td>';
-                $tabla .= '<td>'.$poliza->Objeto.'</td>';
-                $tabla .= '<td>'.$poliza->Contratista.'</td>';
-                $tabla .= '<td width="12%">'.$poliza->Fecha_Final.'</td>';
-                $tabla .= '<td align="right">'.$poliza->Dias_Vencidos.'</td>';
-                $tabla .= '</tr>';
-            endforeach;
-        $tabla .= '</tbody>';
-        $tabla .= '</table>';
+        // Recorrido de las pólizas
+        foreach ($polizas as $poliza):
+            $cuerpo .= "<fieldset style='border-color: #9FCB79'><legend style='border-color: #9FCB79'><b>Póliza de $poliza->Poliza_Tipo del contrato $poliza->Numero_Contrato ($poliza->Contratista)</b></legend>";
+            $cuerpo .= "$poliza->Objeto<br>";
+            $cuerpo .= "<b>Vence:</b> $poliza->Fecha_Vencimiento (faltan $poliza->Dias_Restantes días)<br>";
+            $cuerpo .= "</fieldset><br>";
+        endforeach;
 
         //Se define el asunto
-        $asunto = 'Pólizas por vencerse';
-
+        $asunto = "Pólizas por vencerse";
+        
         //Se verifica, si hay datos se env&iacute;a la tabla
-        if($contador == 0){
-            $cuerpo = 
-            '<b>Listado de p&oacute;lizas por vencerse</b><br/><br/>A la fecha no hay p&oacute;lizas por vencerse.';
+        if(count($polizas) > 0){
+            $mensaje = "Este es el listado de las pólizas que están a punto de vencerse (próximos cinco días): $cuerpo";
         }else{
-            $cuerpo = '<b>Listado de p&oacute;lizas por vencerse</b><br/><br/>Este es el listado de las '.$contador.' p&oacute;lizas que est&aacute;n por vencerse dentro de los pr&oacute;ximos cinco d&iacute;as:'.$tabla;
-        }
+            $mensaje = "A la fecha no hay pólizas por vencerse dentro de los siguientes cinco días.";
+        } // if
+        
+        // Se consultan los usuarios a los que se le enviará el correo
+        $usuarios = $this->auditoria_model->cargar_usuarios_correo(3);
 
-        //Se ejecuta el modelo que env&iaacute;
-        $this->email_model->_enviar_email($asunto, $cuerpo);
+        //Se ejecuta el modelo que envía el correo
+        $this->email_model->enviar($usuarios, $asunto, $mensaje);
         
         //Mensaje de &eacute;xito
         echo 'El mensaje de p&oacute;lizas por vencerse se ha enviado correctamente<br/>';
@@ -230,52 +174,32 @@ Class Email extends CI_Controller{
         //Se carga el modelo que se utilizar&aacute;
         $polizas = $this->email_model->polizas_vencidas();
         
-        /*
-        * Se construye la tabla que se va a enviar
-        */
-        /********************************tabla********************************/
-        $tabla = '<table border="1" bordercolor="white" cellspacing="0" width="100%">';
-        /********************************cabecera********************************/
-        $tabla .= '<thead border="1" bordercolor="white" style="background-color:#0B37B0; font-family:Tahoma; color: white; font-size: 13px;" width="100%">';
-        $tabla .= '<tr>';
-        $tabla .= '<th>Contrato</th>';
-        $tabla .= '<th>P&oacute;liza</th>';
-        $tabla .= '<th>Objeto</th>';
-        $tabla .= '<th>Contratista</th>';
-        $tabla .= '<th>Fecha de vencimiento</th>';
-        $tabla .= '<th>D&iacute;as vencidos</th>';
-        $tabla .= '</tr>';
-        $tabla .= '</thead>';
-        /********************************cuerpo********************************/
-        $tabla .= '<tbody style="font-family:Tahoma; font-size: 12px;">';
-            $contador = 0;
-            foreach ($polizas as $poliza):
-                $contador++;
-                $tabla .= '<tr bordercolor="black">';
-                $tabla .= '<td>'.$poliza->Numero.'</td>';
-                $tabla .= '<td>'.$poliza->Poliza_Tipo.'</td>';
-                $tabla .= '<td>'.$poliza->Objeto.'</td>';
-                $tabla .= '<td>'.$poliza->Contratista.'</td>';
-                $tabla .= '<td width="12%">'.$poliza->Fecha_Final.'</td>';
-                $tabla .= '<td align="right">'.$poliza->Dias_Vencidos.'</td>';
-                $tabla .= '</tr>';
-            endforeach;
-        $tabla .= '</tbody>';
-        $tabla .= '</table>';
+        // Cuerpo
+        $cuerpo = "";
+
+        // Recorrido de las pólizas
+        foreach ($polizas as $poliza):
+            $cuerpo .= "<fieldset style='border-color: #9FCB79'><legend style='border-color: #9FCB79'><b>Póliza de $poliza->Poliza_Tipo del contrato $poliza->Numero_Contrato ($poliza->Contratista)</b></legend>";
+            $cuerpo .= "$poliza->Objeto<br>";
+            $cuerpo .= "<b>Vencido desde:</b> $poliza->Fecha_Vencimiento ($poliza->Dias_Vencidos días)<br>";
+            $cuerpo .= "</fieldset><br>";
+        endforeach;
 
         //Se define el asunto
-        $asunto = 'Pólizas vencidas';
-        
+        $asunto = "Pólizas vencidas";
+
         //Se verifica, si hay datos se env&iacute;a la tabla
-        if($contador == 0){
-            $cuerpo = 
-            '<b>Listado de p&oacute;lizas vencidas</b><br/><br/>A la fecha no hay p&oacute;lizas vencidas.';
+        if(count($polizas) > 0){
+            $mensaje = "Este es el listado de las pólizas que están vencidas a la fecha: $cuerpo";
         }else{
-            $cuerpo = '<b>Listado de contratos vencidos</b><br/><br/>Este es el listado de las '.$contador.' p&oacute;lizas que est&aacute;n vencidas a la fecha:'.$tabla;
+            $mensaje =  "A la fecha no hay pólizas vencidas.";
         }
 
-        //Se ejecuta el modelo que env&iaacute;
-        $this->email_model->_enviar_email($asunto, $cuerpo);
+        // Se consultan los usuarios a los que se le enviará el correo
+        $usuarios = $this->auditoria_model->cargar_usuarios_correo(4);
+
+        //Se ejecuta el modelo que envía el correo
+        $this->email_model->enviar($usuarios, $asunto, $mensaje);
         
         //Mensaje de &eacute;xito
         echo 'El mensaje de p&oacute;lizas vencidas se ha enviado correctamente<br/>';
@@ -289,58 +213,39 @@ Class Email extends CI_Controller{
     function pagos_excedidos(){
         //Se carga el modelo
         $pagos = $this->pago_model->pagos_excedidos();
-        
-        /*
-        * Se construye la tabla que se va a enviar
-        */
-        /********************************tabla********************************/
-        $tabla = '<table border="1" bordercolor="white" cellspacing="0" width="100%">';
-        /********************************cabecera********************************/
-        $tabla .= '<thead border="1" bordercolor="white" style="background-color:#0B37B0; font-family:Tahoma; color: white; font-size: 13px;" width="100%">';
-        $tabla .= '<tr>';
-        $tabla .= '<th>Contrato</th>';
-        $tabla .= '<th>Objeto</th>';
-        $tabla .= '<th>Contratista</th>';
-        $tabla .= '<th>Valor del contrato</th>';
-        $tabla .= '<th>Valor pagado</th>';
-        $tabla .= '<th>Valor excedido</th>';
-        $tabla .= '</tr>';
-        $tabla .= '</thead>';
-        /********************************cuerpo********************************/
-        $tabla .= '<tbody style="font-family:Tahoma; font-size: 12px;">';
-            $contador = 0;
-            foreach ($pagos as $pago):
-                if($pago->Excedido > 0){
-                   $contador++;
-                    $tabla .= '<tr bordercolor="black">';
-                    $tabla .= '<td>'.$pago->Numero.'</td>';
-                    $tabla .= '<td>'.$pago->Objeto.'</td>';
-                    $tabla .= '<td>'.$pago->Contratista.'</td>';
-                    $tabla .= '<td align="right" width="15%">'.'$ '.number_format($pago->Valor_Total, 0, '', '.').'</td>';
-                    $tabla .= '<td align="right" width="15%">'.'$ '.number_format($pago->Pagado, 0, '', '.').'</td>';
-                    $tabla .= '<td align="right" width="15%"><b>'.'$ '.number_format($pago->Excedido, 0, '', '.').'</b></td>';
-                    $tabla .= '</tr>'; 
-                }
-            endforeach;
-        $tabla .= '</tbody>';
-        $tabla .= '</table>';
-        
-        //Se define el asunto
-        $asunto = 'Pagos excedidos a contratos';
-        
-        //Se verifica, si hay datos se env&iacute;a la tabla
-        if($contador == 0){
-            $cuerpo = 
-            '<b>Listado de pagos excedidos a los contratos</b><br/><br/>A la fecha no hay ning&uacute;n pago que exceda el valor de un contrato.';
-        }else{
-            $cuerpo = '<b>Listado de pagos excedidos a los contratos</b><br/><br/>Este es el listado de los '.$contador.' contratos que tienen pagos que van por encima de su valor y aun no han sido liquidados:'.$tabla;
-        }
 
-        //Se ejecuta el modelo que env&iaacute;
-        $this->email_model->_enviar_email($asunto, $cuerpo);
-        
+        // Cuerpo
+        $cuerpo = "";
+
+        // Se recorren los pagos
+        foreach ($pagos as $pago):
+            // Si el pago es excedido
+            if($pago->Excedido > 0){
+                $cuerpo .= "<fieldset style='border-color: #9FCB79'><legend style='border-color: #9FCB79'><b>Contrato $pago->Numero_Contrato ($pago->Contratista)</b></legend>";
+                $cuerpo .= "$pago->Objeto<br>";
+                $cuerpo .= "<b>Total:</b> $".number_format($pago->Valor_Total, 0, '', '.')." | <b>Pagado:</b> $".number_format($pago->Pagado, 0, '', '.')." | <span style='color: red;'>Excedido en <b>$".number_format($pago->Excedido, 0, '', '.')."</b></span>";
+                $cuerpo .= "</fieldset><br>";
+            } // if
+        endforeach;
+
+        //Se define el asunto
+        $asunto = "Pagos excedidos a contratos";
+
+        //Se verifica, si hay datos se envían
+        if(count($pagos) > 0){
+            $mensaje = "Este es el listado de los contratos que tienen pagos que van por encima de su valor y aun no han sido liquidados: $cuerpo";
+        }else{
+            $mensaje = "A la fecha no hay ningún pago que exceda el valor de un contrato.";
+        } // if
+
+        // Se consultan los usuarios a los que se le enviará el correo
+        $usuarios = $this->auditoria_model->cargar_usuarios_correo(5);
+
+        //Se ejecuta el modelo que envía el correo
+        $this->email_model->enviar($usuarios, $asunto, $mensaje);
+
         //Mensaje de &eacute;xito
-        echo 'El mensaje de pagos excedidos se ha enviado correctamente<br/>';
+        echo 'El mensaje de pagos excedidos a contratos se ha enviado correctamente<br/>';
     }//Fin pagos_excedidos
     
     /**
@@ -351,53 +256,33 @@ Class Email extends CI_Controller{
     function no_acta_inicio(){
         //Se carga el modelo
         $contratos = $this->email_model->no_acta_inicio();
-        
-        /*
-        * Se construye la tabla que se va a enviar
-        */
-        /********************************tabla********************************/
-        $tabla = '<table border="1" bordercolor="white" cellspacing="0" width="100%">';
-        /********************************cabecera********************************/
-        $tabla .= '<thead border="1" bordercolor="white" style="background-color:#0B37B0; font-family:Tahoma; color: white; font-size: 13px;" width="100%">';
-        $tabla .= '<tr>';
-        $tabla .= '<th>Contrato</th>';
-        $tabla .= '<th>Objeto</th>';
-        $tabla .= '<th>Contratista</th>';
-        $tabla .= '<th>Fecha inicial</th>';
-        $tabla .= '<th>Fecha vencimiento</th>';
-        $tabla .= '<th>Valor inicial</th>';
-        $tabla .= '</tr>';
-        $tabla .= '</thead>';
-        /********************************cuerpo********************************/
-        $tabla .= '<tbody style="font-family:Tahoma; font-size: 12px;">';
-            $contador = 0;
-            foreach ($contratos as $contrato):
-                $contador++;
-                $tabla .= '<tr bordercolor="black">';
-                $tabla .= '<td align="right">'.$contrato->Numero.'</td>';
-                $tabla .= '<td>'.$contrato->Objeto.'</td>';
-                $tabla .= '<td>'.$contrato->Contratista.'</td>';
-                $tabla .= '<td align="right" width="15%">'.$contrato->Fecha_Inicial.'</td>';
-                $tabla .= '<td align="right" width="15%">'.$contrato->Fecha_Vencimiento.'</td>';
-                $tabla .= '<td align="right" width="15%">$ '.number_format($contrato->Valor_Inicial, 0, '', '.').'</td>';
-                $tabla .= '</tr>';
-            endforeach;
-        $tabla .= '</tbody>';
-        $tabla .= '</table>';
-        
+
+        // Cuerpo
+        $cuerpo = "";
+
+        // Se recorren los contratos
+        foreach($contratos as $contrato):
+            $cuerpo .= "<fieldset style='border-color: #9FCB79'><legend style='border-color: #9FCB79'><b>Contrato $contrato->Numero ($contrato->Contratista)</b></legend>";
+            $cuerpo .= "$contrato->Objeto<br>";
+            $cuerpo .= "<b>Inicia:</b> $contrato->Fecha_Inicial | <b>Finaliza:</b> $contrato->Fecha_Vencimiento";
+            $cuerpo .= "</fieldset><br>";
+        endforeach;
+
         //Se define el asunto
-        $asunto = 'Contratos sin acta de inicio';
-        
+        $asunto = "Contratos sin acta de inicio";
+
         //Se verifica, si hay datos se env&iacute;a la tabla
-        if($contador == 0){
-            $cuerpo = 
-            '<b>Listado de contratos que no tienen acta de inicio</b><br/><br/>A la fecha todos los contratos poseen acta de inicio.';
+        if(count($contratos) > 0){
+            $mensaje = "Este es el listado de los contratos que no tienen acta de inicio: $cuerpo";
         }else{
-            $cuerpo = '<b>Listado de contratos que no tienen acta de inicio</b><br/><br/>Este es el listado de los '.$contador.' contratos que no tienen acta de inicio:'.$tabla;
-        }
-        
-        //Se ejecuta el modelo que env&iaacute;
-        $this->email_model->_enviar_email($asunto, $cuerpo);
+            $mensaje = "A la fecha no hay contratos sin acta de inicio.";
+        } // if
+
+        // Se consultan los usuarios a los que se le enviará el correo
+        $usuarios = $this->auditoria_model->cargar_usuarios_correo(6);
+
+        //Se ejecuta el modelo que envía el correo
+        $this->email_model->enviar($usuarios, $asunto, $mensaje);
         
         //Mensaje de &eacute;xito
         echo 'El mensaje de contratos sin acta de inicio se ha enviado correctamente<br/>';

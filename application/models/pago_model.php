@@ -117,58 +117,30 @@ Class Pago_model extends CI_Model{
     function pagos_excedidos(){
         //Consulta
         $sql =
-        /*'SELECT
-        contratos.Numero,
-        contratos.Objeto,
-        tbl_terceros.Nombre AS Contratista,
-        contratos.Valor_Inicial,
-        Sum(contratos_pagos.Valor_Pago) AS Pagado,
-        (SUM(contratos_pagos.Valor_Pago) - contratos.Valor_Inicial) AS Excedido
+        "SELECT
+            c.Pk_Id_Contrato,
+            c.Numero Numero_Contrato,
+            c.Objeto,
+            t.Nombre AS Contratista,
+            c.Valor_Inicial,
+            ( SELECT IFNULL( SUM( contratos_adiciones.Valor ), 0 ) FROM contratos_adiciones WHERE contratos_adiciones.Fk_Id_Contrato = c.Pk_Id_Contrato ) AS Adiciones,
+            c.Valor_Inicial + ( SELECT IFNULL( SUM( contratos_adiciones.Valor ), 0 ) FROM contratos_adiciones WHERE contratos_adiciones.Fk_Id_Contrato = c.Pk_Id_Contrato ) AS Valor_Total,
+            Sum( cp.Valor_Pago ) AS Pagado,
+            (
+            SUM( cp.Valor_Pago ) - (
+            c.Valor_Inicial + ( SELECT IFNULL( SUM( contratos_adiciones.Valor ), 0 ) FROM contratos_adiciones WHERE contratos_adiciones.Fk_Id_Contrato = c.Pk_Id_Contrato ) 
+            ) 
+            ) AS Excedido 
         FROM
-        contratos
-        INNER JOIN contratos_pagos ON contratos_pagos.Fk_Id_Contratos = contratos.Pk_Id_Contrato
-        INNER JOIN tbl_terceros ON contratos.Fk_Id_Terceros = tbl_terceros.Pk_Id_Terceros
+            contratos AS c
+            INNER JOIN contratos_pagos AS cp ON cp.Fk_Id_Contratos = c.Pk_Id_Contrato
+            INNER JOIN tbl_terceros AS t ON c.Fk_Id_Terceros = t.Pk_Id_Terceros 
+        WHERE
+            c.Fk_Id_Estado <> 2 
         GROUP BY
-        contratos.Numero
+            c.Numero 
         ORDER BY
-        contratos.Numero ASC';*/
-        'SELECT
-            contratos.Pk_Id_Contrato,
-            contratos.Numero,
-            contratos.Objeto,
-            tbl_terceros.Nombre AS Contratista,
-            contratos.Valor_Inicial,
-            (SELECT
-                IFNULL(SUM(contratos_adiciones.Valor), 0)
-            FROM
-                contratos_adiciones
-            WHERE
-                contratos_adiciones.Fk_Id_Contrato = contratos.Pk_Id_Contrato) AS Adiciones,
-            contratos.Valor_Inicial + 
-            (SELECT
-                IFNULL(SUM(contratos_adiciones.Valor), 0)
-            FROM
-                contratos_adiciones
-            WHERE
-                contratos_adiciones.Fk_Id_Contrato = contratos.Pk_Id_Contrato) AS Valor_Total,
-            Sum(contratos_pagos.Valor_Pago) AS Pagado,
-            (SUM(contratos_pagos.Valor_Pago) - (contratos.Valor_Inicial + 
-            (SELECT
-                IFNULL(SUM(contratos_adiciones.Valor), 0)
-            FROM
-                contratos_adiciones
-            WHERE
-                contratos_adiciones.Fk_Id_Contrato = contratos.Pk_Id_Contrato))) AS Excedido
-            FROM
-                contratos
-                INNER JOIN contratos_pagos ON contratos_pagos.Fk_Id_Contratos = contratos.Pk_Id_Contrato
-                INNER JOIN tbl_terceros ON contratos.Fk_Id_Terceros = tbl_terceros.Pk_Id_Terceros
-            WHERE
-                contratos.Fk_Id_Estado <> 2
-            GROUP BY
-                contratos.Numero
-            ORDER BY
-                contratos.Numero ASC';
+            c.Numero ASC";
         
         //Se retorna la consulta
         return $this->db->query($sql)->result();

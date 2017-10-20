@@ -68,6 +68,35 @@ Class Auditoria_model extends CI_Model{
         $this->db->insert('auditoria', $auditoria);
         //Fin de auditoria
     }//Fin insertar_usuario
+
+    /**
+    * Selecciona los usuarios a los que se le enviará el
+    * correo electrónico determinado
+    *
+    * @access   public
+    */
+    function cargar_usuarios_correo($id_correo){
+        // consulta
+        $sql =
+        "SELECT
+            u.Email 
+        FROM
+            tbl_usuarios_correos AS uc
+            INNER JOIN tbl_usuarios AS u ON uc.Fk_Id_Usuario = u.Pk_Id_Usuario 
+        WHERE
+            uc.Fk_Id_Correo = $id_correo";
+
+        // Se crea un arreglo vacío
+        $correos = array();
+
+        // Se consultan el resultado
+        foreach($this->db->query($sql)->result() as $resultado){
+            array_push($correos, $resultado->Email);
+        } // foreach
+
+        // Se retornan los correos
+    return $correos;
+    }
     
     /**
     * Agrega la auditor&iacute;a cuando se inserta un contrato nuevo.
