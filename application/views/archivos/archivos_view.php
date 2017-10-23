@@ -1,9 +1,9 @@
 <div id="form" class="container_12">
     <div class="grid_11">
         <?php
-        if ($this->session->userdata('Tipo') == 1) {
+        // Si tiene permiso
+        if (isset($permisos[3])) {
             echo form_open_multipart('archivos/subir/'.$numero_contrato, array('name' => 'f1')); ?>
-           
                 <table width="100%">
                     <?php
                     $categorias = $this->contrato_model->listar_categorias();
@@ -39,7 +39,6 @@
                         </tr>
                     </table>
                 </table>         
-
             <?php
             echo form_close();
             echo form_fieldset('', array('id' => 'fieldset', 'class' => 'fieldset', 'style' => 'text-align:center;'));

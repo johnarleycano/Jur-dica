@@ -29,12 +29,15 @@ Class Pago extends CI_Controller{
             //Se redirecciona para que cierre la sesion y lo lleve al inicio
             redirect('sesion/cerrar_sesion');
         }
+        
         //Se carga el helper html para usar en la vista
         $this->load->helper('html');
-        //Se carga form_validation para validar los campos
-        //$this->load->library('form_validation');
+
         //Se carga el modelo de los pagos en la base de datos
         $this->load->model('pago_model');
+
+        // Carga de permisos
+        $this->data['permisos'] = $this->session->userdata('Permisos');
     }//Fin construct
     
     /**

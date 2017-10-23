@@ -35,6 +35,9 @@ Class Usuario extends CI_Controller{
         $this->load->library('form_validation');
         //Se carga el modelo que hace la consulta del usuario en la base de datos
         $this->load->model('usuario_model');
+
+        // Carga de permisos
+        $this->data['permisos'] = $this->session->userdata('Permisos');
     }//Fin construct()
     
     /**
@@ -136,6 +139,67 @@ Class Usuario extends CI_Controller{
             redirect('');
         }
     }//Fin registrar_usuario
+
+    /**
+     * Visualiza todos los usuarios del sistema
+     * 
+     * @access  public
+     */
+    function ver(){
+        //Se listan los usuarios
+        $this->data['usuarios'] = $this->usuario_model->listar_usuarios();
+        //se establece el titulo de la p&aacute;gina
+        $this->data['titulo'] = 'Contratos - Usuarios del sistema';
+        //se establece la vista que tiene el contenido principal
+        $this->data['contenido_principal'] = 'usuario/ver_view';
+        //se carga el template
+        $this->load->view('includes/template', $this->data);
+    }//Fin ver()
+
+    /**
+     * Visualiza todos los permisos al usuario
+     * 
+     * @access  public
+     */
+    function permisos(){
+        //Se listan los usuarios
+        $this->data['id_usuario'] = $this->uri->segment(3);
+        //Se listan los usuarios
+        // $this->data['usuarios'] = $this->usuario_model->listar_usuarios();
+        //se establece el titulo de la p&aacute;gina
+        $this->data['titulo'] = 'Contratos - Permisos del usuario';
+        //se establece la vista que tiene el contenido principal
+        $this->data['contenido_principal'] = 'usuario/permisos_view';
+        //se carga el template
+        $this->load->view('includes/template', $this->data);
+    }//Fin permisos()
+
+    function actualizar_permisos(){
+        // Se reciben los datos por POST
+        $id_usuario = $this->input->post("id_usuario");
+        $datos = $this->input->post("datos");
+
+        // Primero, borramos los permisos que ya tenía
+        $this->usuario_model->eliminar_permisos($id_usuario);
+
+        // Registros eliminados
+        // echo $this->db->affected_rows();
+
+        // Si hay permisos por guardar
+        if ($datos) {
+            // Se recorren los registros del arreglo
+            foreach ($datos as $dato) {
+                // Arreglo que irá a la base de datos
+                $arreglo = array(
+                    "Fk_Id_Accion" => $dato,
+                    "Fk_Id_Usuario" => $id_usuario
+                );
+
+                //Se ejecuta el modelo que crea el registro
+                $this->usuario_model->guardar_permiso($arreglo);
+            }
+        } // if
+    }
 }//Fin usuario
 /* End of file usuario.php */
 /* Location: ./contratos/application/controllers/usuario.php */

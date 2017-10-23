@@ -22,13 +22,16 @@ Class Bitacora extends CI_Controller{
         //con esta linea se hereda el constructor de la clase Controller
         parent::__construct();
         //Verifica si el usuario est&aacute; logueado y no pueda acceder por url a menus sin permisos
-        if($this->session->userdata('Pk_Id_Usuario') != TRUE || $this->session->userdata('Tipo') == FALSE)
+        if($this->session->userdata('Pk_Id_Usuario') != TRUE)
         {
             //Se redirecciona para que cierre la sesion y lo lleve al inicio
             redirect('sesion/cerrar_sesion');
         }
         //Se carga el modelo de la bit&aacute;cora en la base de datos
         $this->load->model('bitacora_model');
+        
+        // Carga de permisos
+        $this->data['permisos'] = $this->session->userdata('Permisos');
    }//Fin construct()
    
     /**

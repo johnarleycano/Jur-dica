@@ -77,5 +77,114 @@ Class Usuario_model extends CI_Model{
     function insertar_usuario($usuario_nuevo){
         $this->db->insert('tbl_usuarios', $usuario_nuevo);
     }//Fin insertar_usuario()
+
+    function cargar_permisos($id_usuario){
+        //Columnas a retornar
+        $this->db->where('Fk_Id_Usuario', $id_usuario);
+
+        // Arreglo vacío
+        $permisos = array();
+
+        // Rcorrido de los resultados
+        foreach ($this->db->get("permisos")->result() as $resultado) {
+            // Se adiciona al nuevo arreglo
+            $permisos[$resultado->Fk_Id_Accion] = true;
+        }
+
+        // Se retorna el nuevo arreglo
+        return $permisos;
+    } // cargar_permisos
+
+    /**
+    * Lista los terceros existentes en la base de datos.
+    *
+    * @access   public
+    * @return   
+    */
+    function listar_usuarios($id_usuario = NULL){
+        // Condición de usuario
+        $usuario = ($id_usuario) ? "WHERE u.Pk_Id_Usuario = $id_usuario" : "" ;
+
+        // Consulta
+        $sql =
+        "SELECT
+            u.Pk_Id_Usuario,
+            u.Nombres,
+            u.Apellidos,
+            u.Activo AS Estado,
+            u.Usuario Login,
+            u.Email,
+            u.Telefono 
+        FROM
+            tbl_usuarios AS u
+            $usuario
+        ORDER BY
+            u.Nombres ASC,
+            u.Apellidos ASC";
+
+            if ($id_usuario) {
+                // Se retorna la consulta
+                return $this->db->query($sql)->row();
+            } else {
+                // Se retorna la consulta
+                return $this->db->query($sql)->result();
+            }
+    }//Fin listar_usuarios()
+
+    function cargar_acciones_tipos(){
+        // Se retorna los registros encontrados
+        return $this->db->get("tbl_acciones_tipos")->result();
+    } // cargar_acciones_tipo
+
+    function cargar_modulos(){
+        // Se retorna los registros encontrados
+        return $this->db->get("tbl_modulos")->result();
+    } // cargar_modulos
+
+    function cargar_acciones($id_modulo, $id_accion_tipo){
+        // Consulta
+        $sql =
+        "SELECT
+            a.Pk_Id_Accion,
+            a.Nombre 
+        FROM
+            tbl_acciones AS a 
+        WHERE
+            a.Fk_Id_Modulo = $id_modulo 
+            AND a.Fk_Id_Accion_Tipo = $id_accion_tipo
+        ORDER BY
+            a.Nombre ASC";
+
+        // Se retorna la consulta
+        return $this->db->query($sql)->result();
+    }//Fin cargar_acciones
+
+    function cargar_permisos_usuario($id_usuario){
+        // Consulta
+        $sql =
+        "SELECT
+            p.Fk_Id_Accion 
+        FROM
+            permisos AS p 
+        WHERE
+            p.Fk_Id_Usuario = $id_usuario";
+
+        // Se retorna la consulta
+        return $this->db->query($sql)->result();
+    }//Fin cargar_acciones
+
+    function eliminar_permisos($id_usuario){
+        //Se borran los permisos
+        if($this->db->delete('permisos', array('Fk_Id_Usuario' => $id_usuario))){
+            return true;
+        }
+    } // eliminar_permisos
+
+    function guardar_permiso($datos){
+        // if ($this->db->insert('permisos', $datos)) {
+        //     return true;
+        // }
+        echo $this->db->insert('permisos', $datos);
+    } // guardar_permiso
 }
     

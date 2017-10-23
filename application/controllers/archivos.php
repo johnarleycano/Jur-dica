@@ -29,6 +29,9 @@ Class Archivos extends CI_Controller{
         //Se cargan los modelos y helpers
         $this->load->model('contrato_model');
         $this->load->helper('html');
+
+        // Carga de permisos
+        $this->data['permisos'] = $this->session->userdata('Permisos');
     }//Fin construct()
     
     var $ruta = "archivos/";

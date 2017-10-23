@@ -25,15 +25,17 @@ Class Contrato extends CI_Controller{
         //Verifica si el usuario est&aacute; logueado
         if($this->session->userdata('Pk_Id_Usuario') != TRUE)
         {
-            //Redirecci&oacute;n al controlador de sesi&oacute;n
+            //Redirección al controlador de sesi&oacute;n
             redirect('sesion');
         }
-        //Se carga el modelo de los contratos en la base de datos
-        $this->load->model('contrato_model');
-        //Se carga el modelo de los contratistas en la base de datos
-        $this->load->model('tercero_model');
+        //Se carga los modelos
+        $this->load->model(array('contrato_model', 'tercero_model'));
+
         //Se carga el helper html para usar en la vista
         $this->load->helper('html');
+
+        // Carga de permisos
+        $this->data['permisos'] = $this->session->userdata('Permisos');
    }//Fin construct()
    
     /**

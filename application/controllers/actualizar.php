@@ -22,16 +22,17 @@ Class Actualizar extends CI_Controller{
     function __construct() {
         //con esta linea se hereda el constructor de la clase Controller
         parent::__construct();
+
         //Verifica si el usuario est&aacute; logueado y no pueda acceder por url a menus sin permisos
-        if($this->session->userdata('Pk_Id_Usuario') != TRUE || $this->session->userdata('Tipo') == FALSE)
+        if($this->session->userdata('Pk_Id_Usuario') != TRUE)
         {
             //Se redirecciona para que cierre la sesion y lo lleve al inicio
             redirect('sesion/cerrar_sesion');
         }
-        //Se carga el modelo de los contratistas en la base de datos
-        $this->load->model('tercero_model');
-        //Se carga el modelo de los contratos en la base de datos
-        $this->load->model('contrato_model');
+
+        //Se carga los modelos
+        $this->load->model(array('tercero_model', 'contrato_model'));
+
         //Se carga el helper html para usar en la vista
         $this->load->helper('html');
     }//Fin construct()

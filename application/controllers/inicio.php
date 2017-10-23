@@ -35,6 +35,9 @@ Class Inicio extends CI_Controller{
         $this->load->helper('html');
         //
         $this->load->library('encrypt');
+
+        // Carga de permisos
+        $this->data['permisos'] = $this->session->userdata('Permisos');
     }//Fin construct()
     
     /**

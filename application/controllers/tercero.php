@@ -22,18 +22,20 @@ Class Tercero extends CI_Controller{
         //con esta linea se hereda el constructor de la clase Controller
         parent::__construct();
         ///Verifica si el usuario est&aacute; logueado y no pueda acceder por url a menus sin permisos
-        if($this->session->userdata('Pk_Id_Usuario') != TRUE || $this->session->userdata('Tipo') == FALSE)
+        if($this->session->userdata('Pk_Id_Usuario') != TRUE)
         {
             //Se redirecciona para que cierre la sesion y lo lleve al inicio
             redirect('sesion/cerrar_sesion');
         }
+
         //Se carga el helper form, el cual servir&aacute; para armar el formulario
-        $this->load->helper('form');
-        //Se carga el helper html para usar en la vista
-        $this->load->helper('html');
+        $this->load->helper(array('form', 'html'));
+
         //Se cargan los modelos
-        $this->load->model('tercero_model');
-        $this->load->model('contrato_model');
+        $this->load->model(array('tercero_model', 'contrato_model'));
+        
+        // Carga de permisos
+        $this->data['permisos'] = $this->session->userdata('Permisos');
     }//Fin construct()
     
     /**

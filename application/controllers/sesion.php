@@ -89,6 +89,18 @@ Class Sesion extends CI_Controller{
                 }else{
                     //Se obtiene el id del usuario para la auditor&iacute;a
                     $id_usuario = $datos_usuario->Pk_Id_Usuario;
+
+                    // Si el usuario es administrador
+                    if ($datos_usuario->Tipo == 1) {
+                        // Se cargan todos los permisos
+                    }
+
+                    // Si el usuario es estándar
+                    if ($datos_usuario->Tipo == 2) {
+                        // Se cargan los permisos del usuario
+                        $permisos = $this->usuario_model->cargar_permisos($id_usuario);
+                    }
+
                     //Se arma un array indicando los datos que se van a cargan a la sesi&oacute;n
                     $datos_sesion = array(
                         'Pk_Id_Usuario' => $datos_usuario->Pk_Id_Usuario,
@@ -96,8 +108,10 @@ Class Sesion extends CI_Controller{
                         'Apellidos' => $datos_usuario->Apellidos,
                         'Usuario' => $datos_usuario->Usuario,
                         'Email' => $datos_usuario->Email,
+                        'Permisos' => $permisos,
                         'Tipo' => $datos_usuario->Tipo
                     );
+                    
                     //Se cargan los datos a la sesi&oacute;n
                     $this->session->set_userdata($datos_sesion);
                     

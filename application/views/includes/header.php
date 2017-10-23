@@ -40,7 +40,7 @@
         <script type="text/javascript" src="<?php echo base_url(); ?>js/ui/jquery.effects.core.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery.bgiframe-2.1.2.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>js/datatables.js"></script>
-
+        <script src="<?php echo base_url(); ?>js/funciones.js"></script>
 
         <div class="container_12">
             <div id="titulo_logo">Sistema para la <br>Administracion Juridica</div>
@@ -85,10 +85,13 @@
                 <div id="menu-left"></div>
                 <div id="menu">
                     <ul>
-                        <?php if($this->session->userdata('Tipo') == true){ ?>
                         <li><a href="<?php echo site_url('inicio'); ?>"><span>Contratos</span></a>
                             <ul class="menuDrpDwn">
-                                <li><a href="<?php echo site_url('contrato'); ?>">Nuevo</a></li>
+                                <!-- Si tiene permiso -->
+                                <?php if (isset($permisos[1])) { ?>
+                                    <li><a href="<?php echo site_url('contrato'); ?>">Nuevo</a></li>
+                                <?php } ?>
+
                                 <li><a href="<?php echo site_url('liquidacion'); ?>">Liquidar</a></li>
                             </ul>
                         </li>
@@ -104,14 +107,25 @@
                             </ul>
                         </li>
                          -->
-                        <?php } ?>
 
                         <li>
                             <a href="#"><span>Administración</span></a>
                             <ul class="menuDrpDwn">
-                                <li><a href="<?php echo site_url('auditoria'); ?>">Auditoría</a></li>
-                                <li><a href="<?php echo site_url('tercero/ver'); ?>">Terceros</a></li>
-                                <li><a href="<?php echo site_url('usuario'); ?>">Usuarios</a></li>
+                                <!-- Si tiene permiso -->
+                                <?php if (isset($permisos[13])) { ?>
+                                    <li><a href="<?php echo site_url('auditoria'); ?>">Auditoría</a></li>
+                                <?php } ?>
+
+                                <!-- Si tiene permiso -->
+                                <?php if (isset($permisos[15])) { ?>
+                                    <li><a href="<?php echo site_url('tercero/ver'); ?>">Terceros</a></li>
+                                <?php } ?>
+
+                                <!-- Si tiene permiso -->
+                                <?php if (isset($permisos[14])) { ?>
+                                    <li><a href="<?php echo site_url('usuario/ver'); ?>">Usuarios</a></li>
+                                    <!-- <li><a href="<?php // echo site_url('usuario'); ?>">Usuarios</a></li> -->
+                                <?php } ?>
                             </ul>
                         </li>
                         

@@ -33,7 +33,11 @@ $icono_pdf = base_url('img/icono_pdf.png');
                                      */
                                     echo form_open('informes/contratistas_excel');
                                     // echo form_hidden('id_contratista', $contratista->Pk_Id_Terceros);
-                                    echo form_submit(array( 'type' => 'image', 'src' => $icono, 'target' => 'blank'));
+                                    
+                                    // Si tiene permiso
+                                    if (isset($permisos[19])) {
+                                        echo form_submit(array( 'type' => 'image', 'src' => $icono, 'target' => 'blank'));
+                                    }
                                     ?>
                                 </td>
                             </tr>
@@ -68,7 +72,11 @@ $icono_pdf = base_url('img/icono_pdf.png');
                                      */
                                     echo form_open('informes/contratantes_excel');
                                     // echo form_hidden('id_contratista', $contratista->Pk_Id_Terceros);
-                                    echo form_submit(array( 'type' => 'image', 'src' => $icono, 'target' => 'blank'));
+
+                                    // Si tiene permiso
+                                    if (isset($permisos[20])) {
+                                        echo form_submit(array( 'type' => 'image', 'src' => $icono, 'target' => 'blank'));
+                                    }
                                     ?>
                                 </td>
                             </tr>
@@ -105,7 +113,11 @@ $icono_pdf = base_url('img/icono_pdf.png');
                                 <td rowspan="2">
                                     <?php
                                     echo form_open('informes/estados');
-                                    echo form_submit(array( 'type' => 'image', 'src' => $icono));
+
+                                    // Si tiene permiso
+                                    if (isset($permisos[21])) {
+                                        echo form_submit(array( 'type' => 'image', 'src' => $icono));
+                                    }
                                     ?>
                                 </td>
                             </tr>
@@ -133,7 +145,13 @@ $icono_pdf = base_url('img/icono_pdf.png');
                         <table width="100%">
                             <tr>
                                 <td>
-                                    <td><?php echo form_submit(array( 'type' => 'image', 'src' => $icono)); ?></td>
+                                    <td>
+                                        <?php
+                                        // Si tiene permiso
+                                        if (isset($permisos[22])) {
+                                            echo form_submit(array( 'type' => 'image', 'src' => $icono));
+                                        }  ?>
+                                    </td>
                                 </td>
                             </tr>
                         </table>
@@ -155,7 +173,14 @@ $icono_pdf = base_url('img/icono_pdf.png');
                         <table width="100%">
                             <tr>
                                 <td><?php echo form_input(array('name' => 'fecha1', 'id' => 'fecha1', 'style' => 'width: 140px;', 'readonly' => 'readonly', 'value' => set_value('fecha1'))); ?></td>
-                                <td rowspan="2"><?php  echo form_submit(array( 'type' => 'image', 'src' => $icono)); ?></td>
+                                <td rowspan="2">
+                                    <?php
+                                    // Si tiene permiso
+                                    if (isset($permisos[23])) {
+                                        echo form_submit(array( 'type' => 'image', 'src' => $icono));
+                                    }
+                                    ?>
+                                </td>
                             </tr>
                             <tr>
                                 <td><?php echo form_input(array('name' => 'fecha2', 'id' => 'fecha2', 'style' => 'width: 140px;', 'readonly' => 'readonly', 'value' => set_value('fecha2'))); ?></td>
@@ -181,7 +206,14 @@ $icono_pdf = base_url('img/icono_pdf.png');
                         <table width="100%">
                             <tr>
                                 <td><?php echo form_input(array('name' => 'fecha3', 'id' => 'fecha3', 'style' => 'width: 140px;', 'readonly' => 'readonly', 'value' => set_value('fecha3'))); ?></td>
-                                <td rowspan="2"><?php  echo form_submit(array( 'type' => 'image', 'src' => $icono)); ?></td>
+                                <td rowspan="2">
+                                    <?php 
+                                    // Si tiene permiso
+                                    if (isset($permisos[24])) {
+                                        echo form_submit(array( 'type' => 'image', 'src' => $icono));
+                                    }
+                                    ?>
+                                </td>
                             </tr>
                             <tr>
                                 <td><?php echo form_input(array('name' => 'fecha4', 'id' => 'fecha4', 'style' => 'width: 140px;', 'readonly' => 'readonly', 'value' => set_value('fecha4'))); ?></td>
@@ -216,7 +248,10 @@ $icono_pdf = base_url('img/icono_pdf.png');
                                      */
                                     echo form_open('informes/pagos');
                                     // echo form_hidden('id_contratista', $contratista->Pk_Id_Terceros);
-                                    echo form_submit(array( 'type' => 'image', 'src' => $icono, 'target' => 'blank'));
+                                    // Si tiene permiso
+                                    if (isset($permisos[25])) {
+                                        echo form_submit(array( 'type' => 'image', 'src' => $icono, 'target' => 'blank'));
+                                    }
                                     ?>
                                 </td>
                             </tr>
@@ -251,8 +286,11 @@ $icono_pdf = base_url('img/icono_pdf.png');
                                      * Informe Excel - Por contratista
                                      */                                    
                                     echo form_open('informes/detalle_contratos_excel');
+                                    
                                     // echo form_hidden('id_contratista', $contratista->Pk_Id_Terceros);
-                                    echo form_submit(array( 'type' => 'image', 'src' => $icono, 'target' => 'blank'));
+                                    if (isset($permisos[26])) {
+                                        echo form_submit(array( 'type' => 'image', 'src' => $icono, 'target' => 'blank'));
+                                    }
                                     ?>
                                 </td>
                             </tr>                           

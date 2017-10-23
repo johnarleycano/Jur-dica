@@ -222,20 +222,42 @@ foreach ($contratos as $contrato):
 echo form_fieldset('', 'class="fieldset" style="text-align: center"');
 echo form_fieldset_close(); 
 
-if($this->session->userdata('Tipo') == true){
 ?>
-    <table width="100%">
-        <tr>
-            <td><?php echo form_input($volver); ?></td>
-            <td>
-                <?php
+<table width="100%">
+    <tr>
+        <td><?php echo form_input($volver); ?></td>
+        <td>
+            <?php
+            // Si tiene permiso
+            if (isset($permisos[9])) {
+                // Modificar contrato
                 echo anchor(site_url('actualizar/index/'.$contrato->Pk_Id_Contrato), img($modificar));
+            }
+            
+            // Si tiene permiso
+            if (isset($permisos[8])) {
+                // Ver pagos
                 echo anchor(site_url('pago/index/'.$contrato->Pk_Id_Contrato), img($pago));
+            }
+
+            // Si tiene permiso
+            if (isset($permisos[6])) {
+                // Ver bitácora
                 echo anchor(site_url('bitacora/index/'.$contrato->Pk_Id_Contrato), img($bitacora));
+            }
+            
+            // Si tiene permiso
+            if (isset($permisos[7])) {
+                // Ver archivos
                 echo anchor(site_url('archivos/index/'.$contrato->Numero), img(array('src' => 'img/archivos.png', 'title' => 'Administrar archivos', 'width' => '30', 'height' => '30')));
+            }
+            
+            // Si tiene permiso
+            if (isset($permisos[17])) {
+                // Generar acta de inicio        
                 echo anchor(site_url('informes/acta_inicio/'.$contrato->Pk_Id_Contrato), img($acta_inicio));
-                ?>
-            </td>
-        </tr>
-    </table>
-<?php } ?>
+            }
+            ?>
+        </td>
+    </tr>
+</table>

@@ -5,92 +5,99 @@ echo form_hidden('id_contrato', $id_contrato);
 ?>
 
 <script language="javascript" src="jquery-1.2.6.min.js"></script>
+<!-- Si tiene permisos -->
+    <div id="form" class="container_12">
+        <!--Errores de validaci&oacute;n-->
+        <span class="error">
+            <?php
+            echo form_error('valor');
+            echo form_error('retenido');
+            ?>
+        </span>
+        <table width="100%">
+            <tr>
+                <td><?php echo form_label('Fecha', 'fecha_pago') ?></td>
+                <td><?php echo form_input(array('name' => 'fecha_pago', 'id' => 'fecha_pago', 'readonly' => 'readonly'), set_value('fecha_pago')) ?></td>
+                
+                <td rowspan="5">
+                    <table width="80%">
+                        <?php
+                        foreach ($estado_pagos as $estado):
+                        echo form_hidden('numero_contrato', $estado->Numero);
+                        ?>
+                        
+                        <!-- Campos ocultos con los valores pagado y total del contrato para validar que el siguiente pago no supere el total -->
+                        <input type="hidden" name="valor_total" value="<?php echo $estado->Valor_Inicial + $estado->Valor_Adiciones; ?>" />
+                        <input type="hidden" name="valor_pagado" value="<?php echo $estado->Pagado; ?>" />
+                        
 
-<?php if($this->session->userdata('Tipo') == TRUE){ ?>
-<div id="form" class="container_12">
-    <!--Errores de validaci&oacute;n-->
-    <span class="error">
-        <?php
-        echo form_error('valor');
-        echo form_error('retenido');
-        ?>
-    </span>
-    <table width="100%">
-        <tr>
-            <td><?php echo form_label('Fecha', 'fecha_pago') ?></td>
-            <td><?php echo form_input(array('name' => 'fecha_pago', 'id' => 'fecha_pago', 'readonly' => 'readonly'), set_value('fecha_pago')) ?></td>
-            <td rowspan="5">
-                <table width="80%">
-                    <?php
-                    foreach ($estado_pagos as $estado):
-                    echo form_hidden('numero_contrato', $estado->Numero);
-                    ?>
-                    
-                    <!-- Campos ocultos con los valores pagado y total del contrato para validar que el siguiente pago no supere el total -->
-                    <input type="hidden" name="valor_total" value="<?php echo $estado->Valor_Inicial + $estado->Valor_Adiciones; ?>">
-                    <input type="hidden" name="valor_pagado" value="<?php echo $estado->Pagado; ?>">
-                    
-                    <tr>
-                        <td colspan="2" style="text-align: center"><b><u>Estado de pago del contrato <?php echo $estado->Numero; ?></u></b></th>
-                    </tr>
-                    <tr>
-                        <td><b>Valor (incluídas adiciones): </b></td>
-                        <td style="text-align: right"><?php echo '$ '.number_format($estado->Valor_Inicial + $estado->Valor_Adiciones, 0, '', '.'); ?></td>
-                    </tr>
-                    <tr>
-                        <td><b>Total pagado: </b></td>
-                        <td style="text-align: right"><?php echo '$ '.number_format($estado->Pagado, 0, '', '.'); ?></td>
-                    </tr>
-                    <tr>
-                        <td><b>Saldo: </b></td>
-                        <td style="text-align: right"><?php echo '$ '.number_format($estado->Valor_Inicial + $estado->Valor_Adiciones - $estado->Pagado, 0, '', '.'); ?></td>
-                    </tr>
-                    <tr>
-                        <td><b>Retenido: </b></td>
-                        <td style="text-align: right"><?php echo '$ '.number_format($estado->Valor_Retenido, 0, '', '.'); ?></td>
-                    </tr>
-                    <tr>
-                        <td><b>Porcentaje:  </b></td>
-                        <td style="text-align: right"><?php echo number_format($estado->Porcentaje, 2, '.', '').'%'; ?></td>
-                    </tr>
-                    <?php endforeach; ?>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo form_label('N&uacute;mero de acta', 'numero_acta'); ?></td>
-            <td><?php echo form_input(array('name' => 'numero_acta', 'id' => 'numero_acta', 'style' => 'text-align:right'), set_value('numero_acta')); ?></td>
-        </tr>
-        <tr>
-            <td><?php echo form_label('N&uacute;mero de Factura', 'numero_factura'); ?></td>
-            <td><?php echo form_input(array('name' => 'numero_factura', 'id' => 'numero_factura', 'style' => 'text-align:right'), set_value('numero_factura')); ?></td>
-        </tr>
-        <tr>
-            <td><?php echo form_label('Valor*', 'valor'); ?></td>
-            <td><?php echo form_input(array('name' => 'valor', 'id' => 'valor', 'style' => 'text-align:right'), set_value('valor')); ?></td>
-        </tr>
-        <tr>
-            <td><?php echo form_label('Valor retenido', 'retenido'); ?></td>
-            <td><?php echo form_input(array('name' => 'retenido', 'id' => 'retenido', 'style' => 'text-align:right'), set_value('retenido')); ?></td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <div align="left">
-                    <?php
-                    echo form_submit(array('id' => 'guardar', 'name' => 'guardar'), 'Generar pago');
-                    echo form_input(array('type' => 'button', 'name' => 'volver', 'id' => 'volver', 'value' => 'Regresar', 'onclick'=> 'history.back()'));
-                    ?>
-                    <input type="button" value="Generar informe" style="background: green; color: white" onCLick="javascript:generar_informe()">
-                </div>
-            </td>
-        </tr>
-    </table>
-</div>
-<?php
-echo form_close();
-echo form_fieldset('', $fieldset);
-echo form_fieldset_close();
-}
+                        <tr>
+                            <td colspan="2" style="text-align: center"><b><u>Estado de pago del contrato <?php echo $estado->Numero; ?></u></b></th>
+                        </tr>
+                        <tr>
+                            <td><b>Valor (incluídas adiciones): </b></td>
+                            <td style="text-align: right"><?php echo '$ '.number_format($estado->Valor_Inicial + $estado->Valor_Adiciones, 0, '', '.'); ?></td>
+                        </tr>
+                        <tr>
+                            <td><b>Total pagado: </b></td>
+                            <td style="text-align: right"><?php echo '$ '.number_format($estado->Pagado, 0, '', '.'); ?></td>
+                        </tr>
+                        <tr>
+                            <td><b>Saldo: </b></td>
+                            <td style="text-align: right"><?php echo '$ '.number_format($estado->Valor_Inicial + $estado->Valor_Adiciones - $estado->Pagado, 0, '', '.'); ?></td>
+                        </tr>
+                        <tr>
+                            <td><b>Retenido: </b></td>
+                            <td style="text-align: right"><?php echo '$ '.number_format($estado->Valor_Retenido, 0, '', '.'); ?></td>
+                        </tr>
+                        <tr>
+                            <td><b>Porcentaje:  </b></td>
+                            <td style="text-align: right"><?php echo number_format($estado->Porcentaje, 2, '.', '').'%'; ?></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td><?php echo form_label('N&uacute;mero de acta', 'numero_acta'); ?></td>
+                <td><?php echo form_input(array('name' => 'numero_acta', 'id' => 'numero_acta', 'style' => 'text-align:right'), set_value('numero_acta')); ?></td>
+            </tr>
+            <tr>
+                <td><?php echo form_label('N&uacute;mero de Factura', 'numero_factura'); ?></td>
+                <td><?php echo form_input(array('name' => 'numero_factura', 'id' => 'numero_factura', 'style' => 'text-align:right'), set_value('numero_factura')); ?></td>
+            </tr>
+            <tr>
+                <td><?php echo form_label('Valor*', 'valor'); ?></td>
+                <td><?php echo form_input(array('name' => 'valor', 'id' => 'valor', 'style' => 'text-align:right'), set_value('valor')); ?></td>
+            </tr>
+            <tr>
+                <td><?php echo form_label('Valor retenido', 'retenido'); ?></td>
+                <td><?php echo form_input(array('name' => 'retenido', 'id' => 'retenido', 'style' => 'text-align:right'), set_value('retenido')); ?></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div align="left">
+                        <?php
+                        // Si tiene permiso
+                        if (isset($permisos[4])) {
+                            echo form_submit(array('id' => 'guardar', 'name' => 'guardar'), 'Generar pago');
+                        }
+                        echo form_input(array('type' => 'button', 'name' => 'volver', 'id' => 'volver', 'value' => 'Regresar', 'onclick'=> 'history.back()'));
+                        ?>
+
+                        <!-- Si tiene permisos -->
+                        <?php if (isset($permisos[25])) { ?>
+                            <input type="button" value="Generar informe" style="background: green; color: white" onCLick="javascript:generar_informe()">
+                        <?php } ?>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <?php
+    echo form_close();
+    echo form_fieldset('', $fieldset);
+    echo form_fieldset_close();
 ?>
 
 <table cellpadding="0" cellspacing="0" border="" class="display" id="example" style="font-size: 15px;">
@@ -147,6 +154,7 @@ echo form_fieldset_close();
             "bInfo": true,
             'fillSpace': true,
             "bAutoWidth": true,
+            "stateSave": true,
 
             //Este script establece un orden por cierta columna
             "aaSorting": [[ 0, "asc" ]]

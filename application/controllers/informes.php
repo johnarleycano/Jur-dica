@@ -41,6 +41,9 @@ Class Informes extends CI_Controller{
         $this->load->model(array('informes_model', 'contrato_model', 'email_model', 'pago_model', 'tercero_model'));
         //Se establece la ruta para las fuentes del reporte
         define('FPDF_FONTPATH','application/font/');
+
+        // Carga de permisos
+        $this->data['permisos'] = $this->session->userdata('Permisos');
     }//Fin construct()
 
     /**

@@ -2,9 +2,12 @@
     <div class="grid_11">
         <div class="titulos_formularios">Listado de terceros</div><br>
         
-        <input type="button" value="Agregar tercero" style="float:right; margin-top: -50px;" onClick="javascript:crear_tercero()">
+        <!-- Si tiene permisos -->
+        <?php if (isset($permisos[12])) { ?>
+            <input type="button" value="Agregar tercero" style="float:right; margin-top: -50px;" onClick="javascript:crear_tercero()">
+        <?php } ?>
 
-        <table cellpadding="0" cellspacing="0" border="" class="display" id="example" style="font-size: 15px;" onClick="javascript:">
+        <table cellpadding="0" cellspacing="0" border="" class="display" id="example" style="font-size: 15px;">
             <thead>
                 <tr>
                     <th class="primero">Tipo</th>
@@ -27,10 +30,14 @@
                     <td><?php echo $tercero->Representante_Legal; ?></td>
                     <td>
                         <?php
-                        echo form_open('tercero/actualizar');
-                        echo form_hidden('id_tercero', $tercero->Pk_Id_Terceros);
-                        echo form_submit(array('type' => 'image', 'src' => base_url().'img/modificar.png', 'width' => '25', 'height' => '25'));
-                        echo form_close();//echo anchor(site_url('tercero/actualizar/'.), img(array('src' => 'img/modificar.png', 'title' => 'Ver contrato', 'width' => '20', 'height' => '20'))) ?>
+                        // Si tiene permiso
+                        if (isset($permisos[16])) {
+                            echo form_open('tercero/actualizar');
+                            echo form_hidden('id_tercero', $tercero->Pk_Id_Terceros);
+                            echo form_submit(array('type' => 'image', 'src' => base_url().'img/modificar.png', 'width' => '25', 'height' => '25'));
+                            echo form_close();
+                        }
+                        ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -56,6 +63,7 @@
             "bInfo": true,
             'fillSpace': true,
             "bAutoWidth": true,
+            "stateSave": true,
 
             //Este script establece un orden por cierta columna
             "aaSorting": [[ 0, "asc" ]]

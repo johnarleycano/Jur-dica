@@ -18,9 +18,9 @@
             <td width="20%" style="text-align: right"><?php echo $this->auditoria_model->formato_fecha($contrato->Fecha_Inicial); ?></td>
             <td style="text-align: right">
                 <?php
-                echo anchor(site_url('informes/acta_liquidacion_word/'.$contrato->Pk_Id_Contrato), img(array('src' => 'img/word.png', 'title' => 'Generar acta de liquidación', 'width' => '30', 'height' => '30')));
-                // echo anchor_popup(site_url('informes/acta_liquidacion/'.$contrato->Pk_Id_Contrato), img(array('src' => 'img/pdf.png', 'title' => 'Generar acta de liquidación')), array('width' => '800','height' => '600','scrollbars' => 'yes','status' => 'yes','resizable' => 'yes','screenx' => '0','screeny' => '0'));
-                // echo anchor(site_url('informes/acta_recibo/'.$contrato->Pk_Id_Contrato), img(array('src' => 'img/word.png', 'title' => 'Generar acta de recibo', 'width' => '30', 'height' => '30')));
+                if (isset($permisos[18])) {
+                    echo anchor(site_url('informes/acta_liquidacion_word/'.$contrato->Pk_Id_Contrato), img(array('src' => 'img/word.png', 'title' => 'Generar acta de liquidación', 'width' => '30', 'height' => '30')));
+                }
                 ?>
             </td>
         </tr>

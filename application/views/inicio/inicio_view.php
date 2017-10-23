@@ -1,4 +1,4 @@
-    <div class="titulos_formularios">Listado de contratos</div><br>
+<div class="titulos_formularios">Listado de contratos</div><br>
 <div id="form" class="container_11">
     <table cellpadding="0" cellspacing="0" border="" class="display" id="example" style="font-size: 13px;">
         <thead> 
@@ -32,23 +32,34 @@
                 <td><?php echo substr($contrato->CentroCosto, 0, 22) ; ?></td>
                 <td style="text-align: right;"><?php echo $contrato->Fecha_Inicial; ?></td>
                 <td style="text-align: right">
+                    <!-- Si tiene permiso -->
+                    <?php if (isset($permisos[5])) { ?>
+                        <a href="<?php echo site_url("contrato/ver/".$contrato->Pk_Id_Contrato); ?>" title="Ver contrato"><i class="glyphicon glyphicon-search fa-lg"></i></a>
+                    <?php } ?>
 
-                    <a href="<?php echo site_url("contrato/ver/".$contrato->Pk_Id_Contrato); ?>" title="Ver contrato"><i class="glyphicon glyphicon-search fa-lg"></i></a>
-                    <?php
-                    //Iconos para acceder a cada men&uacute;                                        
-                    //Valida que tenga permisos
-                    if($this->session->userdata('Tipo') == 1){?>
-
+                    <!-- Si tiene permiso -->
+                    <?php if (isset($permisos[9])) { ?>
                         <a href="<?php echo site_url('actualizar/index/'.$contrato->Pk_Id_Contrato); ?>" title="Modificar contrato"><i class="glyphicon glyphicon-pencil fa-lg"></i></a>
+                    <?php } ?>
 
-                        <a href="<?php echo site_url('bitacora/index/'.$contrato->Pk_Id_Contrato); ?>" title="Agregar bit&aacute;cora"><i class="fa fa-book fa-lg"></i></a>
-                        <?php
+                    <!-- Si tiene permiso -->
+                    <?php if (isset($permisos[6])) { ?>
+                        <a href="<?php echo site_url('bitacora/index/'.$contrato->Pk_Id_Contrato); ?>" title="Agregar bitácora"><i class="fa fa-book fa-lg"></i></a>
+                    <?php } ?>
+
+                    <!-- Si tiene permiso -->
+                    <?php if (isset($permisos[7])) { ?>
+                        <a href="<?php echo site_url('archivos/index/'.$contrato->Numero); ?>" title="Administrar archivos"><i class="glyphicon glyphicon-folder-open fa-lg"></i></a> 
+                    <?php } ?>
+                    <!-- Si tiene permiso -->
+                    <?php if (isset($permisos[8])) { ?>
+                        <a href="<?php echo site_url('pago/index/'.$contrato->Pk_Id_Contrato); ?>" title="Realizar pago"><i class="glyphicon glyphicon-usd fa-lg"></i></a>
+                    <?php } ?>
+                    
+                    <!-- Si tiene permiso -->
+                    <?php if (isset($permisos[17])) {
+                        echo anchor(site_url('informes/acta_inicio/'.$contrato->Pk_Id_Contrato), img(array('src' => 'img/word.png', 'title' => 'Generar acta de inicio', 'width' => '25', 'height' => '25')));
                     }
-                    ?>
-                     <a href="<?php echo site_url('archivos/index/'.$contrato->Numero); ?>" title="Administrar archivos"><i class="glyphicon glyphicon-folder-open fa-lg"></i></a> 
-                     <a href="<?php echo site_url('pago/index/'.$contrato->Pk_Id_Contrato); ?>" title="Realizar pago"><i class="glyphicon glyphicon-usd fa-lg"></i></a>
-                     <?php                
-                    echo anchor(site_url('informes/acta_inicio/'.$contrato->Pk_Id_Contrato), img(array('src' => 'img/word.png', 'title' => 'Generar acta de inicio', 'width' => '25', 'height' => '25')));
                     ?>
                 </td>
             </tr>
