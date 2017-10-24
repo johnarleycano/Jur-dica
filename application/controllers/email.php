@@ -42,7 +42,7 @@ Class Email extends CI_Controller{
         // $this->polizas_en_vencimiento();
         // $this->polizas_vencidas();
         // $this->pagos_excedidos();
-        $this->no_acta_inicio();
+        // $this->no_acta_inicio();
     }//Fin index
     
     /**
@@ -70,9 +70,9 @@ Class Email extends CI_Controller{
         
         //Se verifica, si hay datos se env&iacute;a la tabla
         if(count($contratos) > 0){
-            $mensaje = "Este es el listado de los contratos que están a punto de vencerse (próximos cinco días): $cuerpo";
+            $mensaje = "Este es el listado de los contratos que están a punto de vencerse (próximos cinco días):<br> <p>$cuerpo</p>";
         }else{
-            $mensaje = "A la fecha no hay contratos por vencerse dentro de los siguientes cinco días.";
+            $mensaje = "A la fecha no hay contratos por vencerse dentro de los siguientes cinco días.<br>";
         } // if
 
         // Se consultan los usuarios a los que se le enviará el correo
@@ -110,9 +110,9 @@ Class Email extends CI_Controller{
         
         //Se verifica, si hay datos se env&iacute;a la tabla
         if(count($contratos) > 0){
-            $mensaje = "Este es el listado de los contratos que están vencidos a la fecha: $cuerpo";
+            $mensaje = "Este es el listado de los contratos que están vencidos a la fecha:<br> <p>$cuerpo</p>";
         }else{
-            $mensaje =  "A la fecha no hay contratos vencidos.";
+            $mensaje =  "A la fecha no hay contratos vencidos.<br>";
         }
         
         // Se consultan los usuarios a los que se le enviará el correo
@@ -150,9 +150,9 @@ Class Email extends CI_Controller{
         
         //Se verifica, si hay datos se env&iacute;a la tabla
         if(count($polizas) > 0){
-            $mensaje = "Este es el listado de las pólizas que están a punto de vencerse (próximos cinco días): $cuerpo";
+            $mensaje = "Este es el listado de las pólizas que están a punto de vencerse (próximos cinco días):<br> <p>$cuerpo</p>";
         }else{
-            $mensaje = "A la fecha no hay pólizas por vencerse dentro de los siguientes cinco días.";
+            $mensaje = "A la fecha no hay pólizas por vencerse dentro de los siguientes cinco días.<br>";
         } // if
         
         // Se consultan los usuarios a los que se le enviará el correo
@@ -190,9 +190,9 @@ Class Email extends CI_Controller{
 
         //Se verifica, si hay datos se env&iacute;a la tabla
         if(count($polizas) > 0){
-            $mensaje = "Este es el listado de las pólizas que están vencidas a la fecha: $cuerpo";
+            $mensaje = "Este es el listado de las pólizas que están vencidas a la fecha:<br> <p>$cuerpo</p>";
         }else{
-            $mensaje =  "A la fecha no hay pólizas vencidas.";
+            $mensaje =  "A la fecha no hay pólizas vencidas.<br>";
         }
 
         // Se consultan los usuarios a los que se le enviará el correo
@@ -221,9 +221,9 @@ Class Email extends CI_Controller{
         foreach ($pagos as $pago):
             // Si el pago es excedido
             if($pago->Excedido > 0){
-                $cuerpo .= "<fieldset style='border-color: #9FCB79'><legend style='border-color: #9FCB79'><b>Contrato $pago->Numero_Contrato ($pago->Contratista)</b></legend>";
+                $cuerpo .= "<fieldset style='border-color: #9FCB79'><legend style='border-color: #9FCB79'><b>Contrato $pago->Numero_Contrato ($pago->Contratista)</b> </legend>";
                 $cuerpo .= "$pago->Objeto<br>";
-                $cuerpo .= "<b>Total:</b> $".number_format($pago->Valor_Total, 0, '', '.')." | <b>Pagado:</b> $".number_format($pago->Pagado, 0, '', '.')." | <span style='color: red;'>Excedido en <b>$".number_format($pago->Excedido, 0, '', '.')."</b></span>";
+                $cuerpo .= "<b>Total:</b> $".number_format($pago->Valor_Total, 0, '', '.')." | <b>Pagado:</b> $".number_format($pago->Pagado, 0, '', '.')." | <span style='color: red;'>Excedido en <b>$".number_format($pago->Excedido, 0, '', '.')."</b></span><br>";
                 $cuerpo .= "</fieldset><br>";
             } // if
         endforeach;
@@ -233,9 +233,9 @@ Class Email extends CI_Controller{
 
         //Se verifica, si hay datos se envían
         if(count($pagos) > 0){
-            $mensaje = "Este es el listado de los contratos que tienen pagos que van por encima de su valor y aun no han sido liquidados: $cuerpo";
+            $mensaje = "Este es el listado de los contratos que tienen pagos que van por encima de su valor y aun no han sido liquidados:<br> <p>$cuerpo</p>";
         }else{
-            $mensaje = "A la fecha no hay ningún pago que exceda el valor de un contrato.";
+            $mensaje = "A la fecha no hay ningún pago que exceda el valor de un contrato.<br>";
         } // if
 
         // Se consultan los usuarios a los que se le enviará el correo
@@ -265,7 +265,7 @@ Class Email extends CI_Controller{
             $cuerpo .= "<fieldset style='border-color: #9FCB79'><legend style='border-color: #9FCB79'><b>Contrato $contrato->Numero ($contrato->Contratista)</b></legend>";
             $cuerpo .= "$contrato->Objeto<br>";
             $cuerpo .= "<b>Inicia:</b> $contrato->Fecha_Inicial | <b>Finaliza:</b> $contrato->Fecha_Vencimiento";
-            $cuerpo .= "</fieldset><br>";
+            $cuerpo .= "</fieldset><br><br>";
         endforeach;
 
         //Se define el asunto
@@ -273,9 +273,9 @@ Class Email extends CI_Controller{
 
         //Se verifica, si hay datos se env&iacute;a la tabla
         if(count($contratos) > 0){
-            $mensaje = "Este es el listado de los contratos que no tienen acta de inicio: $cuerpo";
+            $mensaje = "Este es el listado de los contratos que no tienen acta de inicio:<br> <p>$cuerpo</p>";
         }else{
-            $mensaje = "A la fecha no hay contratos sin acta de inicio.";
+            $mensaje = "A la fecha no hay contratos sin acta de inicio.<br>";
         } // if
 
         // Se consultan los usuarios a los que se le enviará el correo
