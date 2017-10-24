@@ -29,11 +29,15 @@
                 	<td><?php echo $retVal = ($usuario->Estado == 1) ? "Activo" : "Inactivo" ; ?></td>
                 	<td><?php echo $usuario->Login; ?></td>
                 	<td>
+                        <!-- Si tiene permiso -->
+                        <?php if (isset($permisos[27])) { ?>
+                            <a href="<?php echo site_url('usuario/permisos/'.$usuario->Pk_Id_Usuario); ?>" title="Permisos al usuario"><i class="fa fa-lock fa-lg"></i></a>
+                        <?php } ?>
+
                 		<!-- Si tiene permiso -->
-                		<?php if (isset($permisos[27])) { ?>
-                        	<a href="<?php echo site_url('usuario/permisos/'.$usuario->Pk_Id_Usuario); ?>" title="Permisos al usuario"><i class="fa fa-lock fa-lg"></i></a>
+                		<?php if (isset($permisos[28])) { ?>
+                        	<a href="<?php echo site_url('usuario/correos/'.$usuario->Pk_Id_Usuario); ?>" title="Correos configurados al usuario"><i class="fa fa-envelope fa-lg"></i></a>
                     	<?php } ?>
-                		
                 	</td>
                 </tr>
                 <?php endforeach; ?>

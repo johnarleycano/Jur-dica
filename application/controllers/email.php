@@ -37,12 +37,12 @@ Class Email extends CI_Controller{
          * Se llaman todos los métodos para que se invoque automáticamente
          * todos los correos desde solo un lugar
          */
-        // $this->contratos_en_vencimiento();
-        // $this->contratos_vencidos();
-        // $this->polizas_en_vencimiento();
-        // $this->polizas_vencidas();
-        // $this->pagos_excedidos();
-        // $this->no_acta_inicio();
+        $this->contratos_en_vencimiento();
+        $this->contratos_vencidos();
+        $this->polizas_en_vencimiento();
+        $this->polizas_vencidas();
+        $this->pagos_excedidos();
+        $this->no_acta_inicio();
     }//Fin index
     
     /**

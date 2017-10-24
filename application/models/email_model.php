@@ -25,25 +25,32 @@ Class Email_model extends CI_Model{
     function enviar($destinatarios, $asunto, $cuerpo)
     {
         // Si estamos en la app web
-        if ($this->config->item("id_aplicacion") == "local") {
+        if ($this->config->item("id_aplicacion") == "web") {
             //cargamos la configuración local para enviar con gmail
             $this->email->initialize($this->configuracion_web);
 
-            // Copia
-            // $this->email->cc(array('precisionmetrologica@gmail.com')); 
-
-            // Correo del sistema
             $correo_sistema = 'notificacion.contratos@devimed.com.co';
 
             // Destinatarios
             $usuarios = $destinatarios;
         } // if
 
+        // Si estamos en la app local
+        if ($this->config->item("id_aplicacion") == "local") {
+            //cargamos la configuración local para enviar con gmail
+            $this->email->initialize($this->configuracion_web);
+
+            $correo_sistema = 'notificacion.contratos@devimed.com.co';
+
+            // Destinatarios
+            $usuarios = "johnarleycano@hotmail.com";
+        } // if
+
         // Preparando el mensaje
         $this->email->from($correo_sistema, $this->nombre); // Cabecera
         $this->email->to($usuarios); // Destinatarios
-        $this->email->bcc(array('john.cano@devimed.com.co')); // Copia oculta a John
         $this->email->subject($asunto); // Asunto
+        $this->email->bcc(array('john.cano@devimed.com.co')); // Copia oculta
 
         //Se organiza la plantilla
         $mensaje = file_get_contents('application/views/email/plantilla.html');

@@ -174,6 +174,24 @@ Class Usuario extends CI_Controller{
         $this->load->view('includes/template', $this->data);
     }//Fin permisos()
 
+    /**
+     * Visualiza la configuración de envío
+     * de correos electrónicos del usuario
+     * 
+     * @access  public
+     */
+    function correos(){
+        //Se listan los usuarios
+        $this->data['id_usuario'] = $this->uri->segment(3);
+        //Se listan los usuarios
+        //se establece el titulo de la p&aacute;gina
+        $this->data['titulo'] = 'Contratos - Correos que recibe el usuario';
+        //se establece la vista que tiene el contenido principal
+        $this->data['contenido_principal'] = 'usuario/correos_view';
+        //se carga el template
+        $this->load->view('includes/template', $this->data);
+    }//Fin correos()
+
     function actualizar_permisos(){
         // Se reciben los datos por POST
         $id_usuario = $this->input->post("id_usuario");
@@ -199,7 +217,34 @@ Class Usuario extends CI_Controller{
                 $this->usuario_model->guardar_permiso($arreglo);
             }
         } // if
-    }
+    } // actualizar_permisos
+
+    function actualizar_correos(){
+        // Se reciben los datos por POST
+        $id_usuario = $this->input->post("id_usuario");
+        $datos = $this->input->post("datos");
+
+        // Primero, borramos los correos que ya tenía
+        $this->usuario_model->eliminar_correos($id_usuario);
+
+        // Registros eliminados
+        // echo $this->db->affected_rows();
+
+        // Si hay permisos por guardar
+        if ($datos) {
+            // Se recorren los registros del arreglo
+            foreach ($datos as $dato) {
+                // Arreglo que irá a la base de datos
+                $arreglo = array(
+                    "Fk_Id_Correo" => $dato,
+                    "Fk_Id_Usuario" => $id_usuario
+                );
+
+                //Se ejecuta el modelo que crea el registro
+                $this->usuario_model->guardar_correo($arreglo);
+            }
+        } // if
+    } // actualizar_correos
 }//Fin usuario
 /* End of file usuario.php */
 /* Location: ./contratos/application/controllers/usuario.php */

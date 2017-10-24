@@ -141,6 +141,19 @@ Class Usuario_model extends CI_Model{
         return $this->db->get("tbl_modulos")->result();
     } // cargar_modulos
 
+    function cargar_correos(){
+        $this->db->order_by("Nombre");
+        // Se retorna los registros encontrados
+        return $this->db->get("tbl_correos")->result();
+    } // cargar_modulos
+
+    function cargar_correos_usuario($id_usuario){
+        $this->db->where("Fk_Id_Usuario", $id_usuario);
+
+        // Se retorna los registros encontrados
+        return $this->db->get("tbl_usuarios_correos")->result();
+    } // cargar_modulos
+
     function cargar_acciones($id_modulo, $id_accion_tipo){
         // Consulta
         $sql =
@@ -180,11 +193,22 @@ Class Usuario_model extends CI_Model{
         }
     } // eliminar_permisos
 
+    function eliminar_correos($id_usuario){
+        //Se borran los permisos
+        if($this->db->delete('tbl_usuarios_correos', array('Fk_Id_Usuario' => $id_usuario))){
+            return true;
+        }
+    } // eliminar_correos
+
     function guardar_permiso($datos){
         // if ($this->db->insert('permisos', $datos)) {
         //     return true;
         // }
         echo $this->db->insert('permisos', $datos);
     } // guardar_permiso
+
+    function guardar_correo($datos){
+        echo $this->db->insert('tbl_usuarios_correos', $datos);
+    } // guardar_correo
 }
     
