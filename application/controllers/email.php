@@ -217,6 +217,9 @@ Class Email extends CI_Controller{
         // Cuerpo
         $cuerpo = "";
 
+        // Contador
+        $cont = 0;
+
         // Se recorren los pagos
         foreach ($pagos as $pago):
             // Si el pago es excedido
@@ -225,6 +228,9 @@ Class Email extends CI_Controller{
                 $cuerpo .= "$pago->Objeto<br>";
                 $cuerpo .= "<b>Total:</b> $".number_format($pago->Valor_Total, 0, '', '.')." | <b>Pagado:</b> $".number_format($pago->Pagado, 0, '', '.')." | <span style='color: red;'>Excedido en <b>$".number_format($pago->Excedido, 0, '', '.')."</b></span><br>";
                 $cuerpo .= "</fieldset><br>";
+
+                // Aumenta el contador
+                $cont++;
             } // if
         endforeach;
 
@@ -232,7 +238,7 @@ Class Email extends CI_Controller{
         $asunto = "Pagos excedidos a contratos";
 
         //Se verifica, si hay datos se envían
-        if(count($pagos) > 0){
+        if($cont > 0){
             $mensaje = "Este es el listado de los contratos que tienen pagos que van por encima de su valor y aun no han sido liquidados:<br> <p>$cuerpo</p>";
         }else{
             $mensaje = "A la fecha no hay ningún pago que exceda el valor de un contrato.<br>";

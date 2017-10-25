@@ -35,6 +35,9 @@ Class Actualizar extends CI_Controller{
 
         //Se carga el helper html para usar en la vista
         $this->load->helper('html');
+
+        // Carga de permisos
+        $this->data['permisos'] = $this->session->userdata('Permisos');
     }//Fin construct()
     
     /**
