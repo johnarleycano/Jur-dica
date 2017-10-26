@@ -13,7 +13,7 @@ $acta_inicio = array('src' => 'img/word.png', 'title' => 'Generar acta de inicio
 foreach ($contratos as $contrato):
 
     $valor_total = $contrato->Valor_Inicial + $contrato->Valor_Adiciones;
-    $plazo_total = $contrato->Plazo_Inicial + $contrato->Plazo_Adiciones;
+    $plazo_total = $contrato->Plazo_Inicial + $contrato->Plazo_Adiciones + $contrato->Plazo_Suspension;
 ?>
     <center>
         <b>Contrato N&uacute;mero <?php echo $contrato->Numero; ?></b>

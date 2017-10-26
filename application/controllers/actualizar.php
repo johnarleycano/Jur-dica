@@ -177,7 +177,7 @@ Class Actualizar extends CI_Controller{
             }else{
                 $id_contratista = $this->input->post('contratista');
             }
-
+            
             //Si existe acta de inicio
             if($this->input->post('acta_inicio') == 1){
                 //Esta sera la fecha de inicio del contrato
@@ -186,7 +186,8 @@ Class Actualizar extends CI_Controller{
                 $fecha_inicial = $this->input->post('fecha_inicial');
             }
 
-            $plazo_total =  $this->input->post('plazo_adiciones') + $this->input->post('plazo') + $this->input->post('plazo_adicion');
+            $plazo_total =  $this->input->post('plazo_adiciones') + $this->input->post('plazo') + $this->input->post('plazo_adicion') + $this->input->post('dias_suspension');
+            
             //Se ejecuta el modelo que calcula la fecha de vencmiento a partir de la fecha inicial y el plazo
             $fecha_vencimiento = $this->contrato_model->calcular_vencimiento($fecha_inicial, $plazo_total);
             
@@ -198,7 +199,9 @@ Class Actualizar extends CI_Controller{
                 'Valor_Inicial' => $this->input->post('valor_inicial'),
                 'Fecha_Inicial' => $this->input->post('fecha_inicial'),
                 'Plazo' => $this->input->post('plazo'),
+                'Plazo_Suspension' => $this->input->post('dias_suspension'),
                 'Fecha_Vencimiento' => $fecha_vencimiento,
+                'Fecha_Suspension' => $this->input->post('fecha_suspension'),
                 'Porcentaje_Avance' => $this->input->post('porcentaje_avance'),
                 'Acta_Inicio' => $this->input->post('acta_inicio'),
                 'Fecha_Acta_Inicio' => $this->input->post('fecha_acta'),

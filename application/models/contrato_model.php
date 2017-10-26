@@ -173,12 +173,14 @@ Class Contrato_model extends CI_Model{
             c.Fecha_Inicial,
             c.Fecha_Vencimiento,
             c.Porcentaje_Avance,
+            c.Plazo_Suspension,
             c.Acta_Inicio,
             c.Fecha_Acta_Inicio,
             t.Pk_Id_Terceros AS Pk_Id_Tercero_Contratante,            
             p.Pk_Id_Terceros AS Fk_Id_Terceros_CentrodeCostos,
             t.Nombre AS Contratante,
-            p.Nombre AS CentroCosto
+            p.Nombre AS CentroCosto,
+            c.Fecha_Suspension
         FROM
             contratos AS c
         INNER JOIN tbl_terceros ON c.Fk_Id_Terceros = tbl_terceros.Pk_Id_Terceros
@@ -534,7 +536,7 @@ Class Contrato_model extends CI_Model{
     function calcular_vencimiento($fecha_inicio, $dias){
         //Se realiza la consulta
         $sql =
-        "SELECT DATE_ADD('{$fecha_inicio}', INTERVAL {$dias} DAY) AS Fecha_Vencimiento";
+        "SELECT DATE_ADD('$fecha_inicio', INTERVAL $dias DAY) AS Fecha_Vencimiento";
 
         //Se recorre
         foreach ($this->db->query($sql)->result() as $valor){

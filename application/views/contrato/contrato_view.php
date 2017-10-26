@@ -60,7 +60,7 @@ echo form_open('contrato/agregar_contrato');
                     <td><?php echo form_input(array('name' => 'nuevo_contratista', 'id' => 'nuevo_contratista', 'value' => set_value('nuevo_contratista'))); ?></td>
                 </tr>
                 <tr>
-                    <td colspan="2"><?php echo form_textarea(array('class' => 'textarea_actualizar1','name' => 'objeto_contrato', 'id' => 'objeto_contrato', 'value' => set_value('objeto_contrato'))); ?></td>
+                    <td colspan="2"><?php echo form_textarea(array('class' => 'textarea_actualizar1', 'style' => 'height: 200px;', 'name' => 'objeto_contrato', 'id' => 'objeto_contrato', 'value' => set_value('objeto_contrato'))); ?></td>
                     <td colspan="2">
                         <table width="100%">
                             <tr>
@@ -87,6 +87,21 @@ echo form_open('contrato/agregar_contrato');
                             <tr>
                                 <td><?php echo form_label('Contratante', 'contratante'); ?></td>
                                 <td><?php echo form_dropdown('contratante', $_contratantes); ?></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <fieldset>
+                                        <legend>Si se ha suspendido:</legend>
+                                    </fieldset>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><?php echo form_label('Fecha de suspensión', 'fecha_suspension'); ?></td>
+                                <td><?php echo form_input(array('name' => 'fecha_suspension', 'id' => 'fecha_suspension', 'readonly' => 'readonly')) ?></td>
+                            </tr>
+                            <tr>
+                                <td><?php echo form_label('Días suspendido', 'dias_suspension'); ?></td>
+                                <td><?php echo form_input(array('name' => 'dias_suspension', 'id' => 'dias_suspension')) ?></td>
                             </tr>
                         </table>
                     </td>

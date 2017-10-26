@@ -136,7 +136,7 @@ Class Contrato extends CI_Controller{
                 //Esta sera la fecha de inicio del contrato
                 $fecha_inicial = $this->input->post('fecha_acta');
             }else{
-                $fecha_inicial = $this->input->post('fecha_inicial');
+                $fecha_inicial = $this->input->post('fecha_inicial') + $this->input->post('dias_suspension');
             }
 
             //Se ejecuta el modelo que calcula la fecha de vencmiento a partir de la fecha inicial y el plazo
@@ -148,6 +148,8 @@ Class Contrato extends CI_Controller{
                 'Lugar' => $this->input->post('localizacion_contrato'),
                 'Fk_Id_Estado' => $this->input->post('estados_contratos'),
                 'Valor_Inicial' => $this->input->post('valor_inicial'),
+                'Plazo_Suspension' => $this->input->post('dias_suspension'),
+                'Fecha_Suspension' => $this->input->post('fecha_suspension'),
                 'Fecha_Inicial' => $this->input->post('fecha_inicial'),
                 'Plazo' => $this->input->post('plazo'),
                 'Fecha_Vencimiento' => $fecha_vencimiento,

@@ -176,7 +176,7 @@
 
                 /************************Fechas************************/
                 $('#fecha_inicial, #vencimiento, #fecha_acta, #inicio_cumplimiento, #vencimiento_cumplimiento, #inicio_prestaciones, #vencimiento_prestaciones,\n\
-                    #inicio_anticipos, #vencimiento_anticipos, #inicio_calidad, #vencimiento_calidad, #inicio_estabilidad, #vencimiento_estabilidad, #fecha_pago, \n\
+                    #inicio_anticipos, #vencimiento_anticipos, #inicio_calidad, #vencimiento_calidad, #inicio_estabilidad, #vencimiento_estabilidad, #fecha_pago, #fecha_suspension, \n\
                     #inicio_rc, #vencimiento_rc, #fecha1, #fecha2, #fecha3, #fecha4').datepicker({
                     dateFormat : 'yy-mm-dd',
                     showAnim : 'slideDown',
