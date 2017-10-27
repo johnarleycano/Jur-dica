@@ -14,7 +14,7 @@
         <tr>
             <td width="12%" style="text-align: right"><?php echo $contrato->Numero; ?></td>
             <td width="15%"><?php echo $contrato->Estado; ?></td>
-            <td width="20%" style="text-align: right"><?php echo '$ '.number_format($contrato->Valor_Inicial,0,'','') ; ?></td>
+            <td width="20%" style="text-align: right"><?php echo '$ '.number_format($contrato->Valor_Inicial,0,'','.') ; ?></td>
             <td width="20%" style="text-align: right"><?php echo $this->auditoria_model->formato_fecha($contrato->Fecha_Inicial); ?></td>
             <td style="text-align: right">
                 <?php

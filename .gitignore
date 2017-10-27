@@ -2,3 +2,4 @@
 
 /archivos/*
 application/config/config.php
+application/views/informes/informes/acta_recibo_.php
