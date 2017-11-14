@@ -101,7 +101,7 @@ Class Auditoria_model extends CI_Model{
     /**
     * Agrega la auditor&iacute;a cuando se inserta un contrato nuevo.
     *
-    * @access	public
+    * @access   public
     */
     function insertar_contrato($numero){
         //Accion de auditoria
@@ -109,6 +109,22 @@ Class Auditoria_model extends CI_Model{
             'Fk_Id_usuario' => $this->session->userdata('Pk_Id_Usuario'),
             'descripcion' => 'Crea el contrato '.$numero,
             'Fk_Id_Auditoria_Tipo' => 5
+        );
+        $this->db->insert('auditoria', $auditoria);
+        //Fin de auditoria
+    }//Fin insertar_usuario
+    
+    /**
+    * Agrega la auditor&iacute;a cuando se inserta una nueva solicitud.
+    *
+    * @access	public
+    */
+    function insertar_solicitud_contrato($id){
+        //Accion de auditoria
+        $auditoria = array(
+            'Fk_Id_usuario' => $this->session->userdata('Pk_Id_Usuario'),
+            'descripcion' => 'Crea la solicitud de contrato No. '.$id,
+            'Fk_Id_Auditoria_Tipo' => 20
         );
         $this->db->insert('auditoria', $auditoria);
         //Fin de auditoria

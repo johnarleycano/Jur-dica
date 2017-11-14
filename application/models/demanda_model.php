@@ -8,13 +8,10 @@ Class Demanda_model extends CI_Model{
     
     /**
     * Guarda en la base de datos los datos de la demanda.
-
-
-    
+    * 
     * @access	public
     * @return	
     */
-
     function guardar_actualizar_demanda($demanda, $id_demanda){
         //Se actualizan los datos principales del contrato
         $this->db->where('Pk_Id_Demandas', $id_demanda);

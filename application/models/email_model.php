@@ -12,8 +12,8 @@ Class Email_model extends CI_Model{
         'smtp_user' => 'notificacion.contratos',
         'smtp_pass' => 'd3v1m3d*',
         'mailtype' => 'html',
-        // 'charset' => 'utf-8',
-        // 'newline' => "\r\n"
+        'charset' => 'utf-8',
+        'newline' => "\r\n"
     );
 
     var $nombre = 'Notificación - Devimed S.A.';
@@ -22,7 +22,7 @@ Class Email_model extends CI_Model{
      * Envío de correo electrónico
      * previamente formateado
      */
-    function enviar($destinatarios, $asunto, $cuerpo)
+    function enviar($destinatarios, $asunto, $cuerpo, $opciones = Null)
     {
         // Si estamos en la app web
         if ($this->config->item("id_aplicacion") == "web") {
@@ -52,6 +52,11 @@ Class Email_model extends CI_Model{
         $this->email->subject($asunto); // Asunto
         $this->email->bcc(array('john.cano@devimed.com.co')); // Copia oculta
 
+        // Si trae adjunto
+        if ($opciones["adjunto"]) {
+            $this->email->attach($opciones["adjunto"]); // Adjunto
+        }
+
         //Se organiza la plantilla
         $mensaje = file_get_contents('application/views/email/plantilla.html');
         $mensaje = str_replace('{MENSAJE}', $cuerpo, $mensaje);
@@ -68,7 +73,7 @@ Class Email_model extends CI_Model{
     */
     function contratos_en_vencimiento(){
         $sql = 
-        'SELECT
+        "SELECT
             c.Numero,
             t.Nombre AS Contratista,
             c.Objeto,
@@ -78,9 +83,9 @@ Class Email_model extends CI_Model{
             contratos AS c
             INNER JOIN tbl_terceros AS t ON c.Fk_Id_Terceros = t.Pk_Id_Terceros 
         WHERE
-            ( ( c.Fecha_Vencimiento - CURDATE( ) ) BETWEEN 0 AND 5 ) 
+            ( ( c.Fecha_Vencimiento - CURDATE( ) ) BETWEEN 0 AND 15 ) 
         ORDER BY
-            c.Fecha_Vencimiento ASC';
+            c.Fecha_Vencimiento ASC";
         
         //Se retorna la consulta
         return $this->db->query($sql)->result(); 
@@ -106,7 +111,7 @@ Class Email_model extends CI_Model{
             c.Fecha_Vencimiento < CURDATE( ) 
             AND c.Fk_Id_Estado != 2 
         ORDER BY
-            c.Numero ASC';
+            c.Fecha_Vencimiento DESC';
         
         //Se retorna la consulta
         return $this->db->query($sql)->result(); 

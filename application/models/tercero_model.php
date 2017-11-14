@@ -32,8 +32,8 @@ Class Tercero_model extends CI_Model{
     /**
     * Lista los tipos de terceros existentes en la base de datos.
     *
-    * @access	public
-    * @return	
+    * @access   public
+    * @return   
     */
     function listar_tipo_terceros(){
         //columnas que se van a retornar
@@ -46,6 +46,19 @@ Class Tercero_model extends CI_Model{
         
         return $resultado;
     }//Fin listar_tipo_terceros()
+    
+    /**
+    * Lista los tipos de contratos en la base de datos.
+    *
+    * @access	public
+    * @return	
+    */
+    function listar_tipos_contratos(){
+        $this->db->order_by('Nombre', "asc"); 
+        
+        //Se retorna la consulta
+        return $this->db->get('tbl_tipos_contratos')->result();
+    }//Fin listar_tipos_contratos()
     
     /**
     * Lista los terceros existentes en la base de datos.

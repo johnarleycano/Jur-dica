@@ -29,14 +29,19 @@ Class Contrato extends CI_Controller{
             redirect('sesion');
         }
         //Se carga los modelos
-        $this->load->model(array('contrato_model', 'tercero_model'));
+        $this->load->model(array('contrato_model', 'tercero_model', 'email_model'));
 
         //Se carga el helper html para usar en la vista
         $this->load->helper('html');
 
+        // Se cargan las librerías
+        $this->load->library(array('email'));
+
         // Carga de permisos
         $this->data['permisos'] = $this->session->userdata('Permisos');
    }//Fin construct()
+
+   var $ruta_solicitudes = "archivos/solicitudes/";
    
     /**
      * Muestra la vista principal del m&oacute;dulo de sesi&oacute;n.
@@ -58,6 +63,27 @@ Class Contrato extends CI_Controller{
         $this->data['titulo'] = 'Contratos - Crear nuevo';
         //se establece la vista que tiene el contenido principal
         $this->data['contenido_principal'] = 'contrato/contrato_view';
+        //se carga el template
+        $this->load->view('includes/template', $this->data);
+    }//Fin index
+
+    /**
+     * Muestra la vista principal para la gestión de 
+     * solicitud de un contrato
+     * 
+     * @access  public
+     */
+    function solicitar(){
+        // Se traen los contratistas que se encuentran en la aplicaci&oacute;n
+        $this->data['contratistas'] = $this->tercero_model->listar_contratistas();
+        //Se traen los centros de costos        
+        $this->data['centro_costos'] = $this->tercero_model->listar_centro_costos();
+        //Se traen los tipos de contratos        
+        $this->data['tipos_contratos'] = $this->tercero_model->listar_tipos_contratos();
+        //se establece el titulo de la p&aacute;gina
+        $this->data['titulo'] = 'Contratos - Solicitar';
+        //se establece la vista que tiene el contenido principal
+        $this->data['contenido_principal'] = 'contrato/solicitar_view';
         //se carga el template
         $this->load->view('includes/template', $this->data);
     }//Fin index
@@ -124,7 +150,7 @@ Class Contrato extends CI_Controller{
                 //Y el nombre del contratista
                 $id_contratista = $this->db->insert_id();
                 $nombre = $this->input->post('nuevo_contratista');
-                
+                    
                 //Se envian los datos del contratista al modelo
                 $this->auditoria_model->insertar_tercero($id_contratista, $nombre);
             }else{
@@ -273,6 +299,133 @@ Class Contrato extends CI_Controller{
             $this->load->view('includes/template', $this->data);
         }
     }//Fin agregar_contrato
+
+    /**
+    * Funci&oacute;n que se encarga de agregar
+    * una solicitud de un contrato nuevo
+    * 
+    * @access   public
+    */
+    function agregar_solicitud(){
+        // Se consulta el id de la última solicitud creada
+        $id_solicitud = $this->contrato_model->consultar_id_solicitud() + 1;
+
+        // $this->load->helper('file');
+
+          
+
+        // $this->form_validation->set_rules('userfile', '', 'callback_file_check');
+
+        // Datos del archivo a subir
+        $config['overwrite'] = FALSE;
+        $config['upload_path'] = $this->ruta_solicitudes;
+        $config['file_name'] =  "Solicitud $id_solicitud.xlsx";          //Nombre del archivo. Se guarda con un nombre espec&iacute;fico
+        $config['allowed_types'] = 'xlsx';                                  // Formatos de archivo permitidos
+        $config['remove_spaces'] = TRUE;                                    // Convierte los espacios en blanco en guiones bajos
+        $config['max_size'] = 0;                                            // limite de tamano para el archivo. 0 = Sin limite
+
+        //Se carga la librería
+        $this->load->library('upload', $config);
+
+        /*
+         * Estas son las validaciones que se realizan con el Helper form_validation
+         */
+        $this->form_validation->set_rules('contratista', 'El contratista', 'required|trim')
+            ->set_rules('tipo_contrato', 'El tipo de contrato', 'required|trim')
+            ->set_rules('centro_costo', 'El centro de costos', 'required|trim')
+            ->set_rules('objeto_contrato', 'El objeto del contrato', 'required|trim')
+            ->set_rules('fecha_inicial', 'La fecha de inicio del contrato', 'required|trim')
+            ->set_rules('plazo', 'El plazo', 'required|numeric|trim')
+            ->set_rules('valor_inicial', 'El valor inicial del contrato', 'required|numeric|trim');
+        
+
+         //Mensajes que se muestran cuando no se supera la validaci&oacute;n
+        $this->form_validation->set_message('required', '-%s no puede estar vac&iacute;o')
+            ->set_message('trim', '-%s no puede estar vac&iacute;o')
+            ->set_message('numeric', '-%s no puede contener letras.');
+
+        /*
+         * Esta es la condición que ejecuta las reglas y no lo deja pasar. 
+         * Si el método devuelve FALSE, la validación no se llevó corretamente
+         */
+        if($this->form_validation->run() == false){
+            //Se imprime el mensaje de informaci&oacute;n
+            $this->data['mensaje_alerta'] = "Hacen falta algunos datos necesarios<br> para guardar la solicitud. Verifique por favor";
+            $this->solicitar();
+        } elseif($_FILES['userfile']['name'] == ""){
+            //Se escribe el mensaje de error
+            $this->data['mensaje_error'] = "No se cargó ningún archivo";
+            $this->solicitar();
+        } elseif(!$this->upload->do_upload()) {
+            echo "entra";
+            //Se escribe el mensaje de error
+            $this->data['mensaje_error'] = $this->upload->display_errors();
+            $this->solicitar();
+        }else{
+            //Se ejecuta el modelo que calcula la fecha de vencmiento a partir de la fecha inicial y el plazo
+            $fecha_vencimiento = $this->contrato_model->calcular_vencimiento($this->input->post('fecha_inicial'), $this->input->post('plazo'));
+
+            $contrato = array(
+                'Pk_Id_Contrato_Solicitud' => $id_solicitud,
+                'Fecha_Inicial' => $this->input->post('fecha_inicial'),
+                'Fecha_Creacion' => date("Y-m-d H:i:s"),
+                'Fecha_Vencimiento' => $fecha_vencimiento,
+                'Fk_Id_Terceros' => $this->input->post('contratista'),
+                'Fk_Id_Terceros_Centro_Costos' => $this->input->post('centro_costo'),
+                'Fk_Id_Tipo_Contrato' => $this->input->post('tipo_contrato'),
+                'Fk_Id_Usuario' => $this->session->userdata('Pk_Id_Usuario'),
+                'Nombre_Obra' => $this->input->post('nombre_obra'),
+                'Observaciones' => $this->input->post('observaciones'),
+                'Objeto' => $this->input->post('objeto_contrato'),
+                'Plazo' => $this->input->post('plazo'),
+                'Valor_Inicial' => $this->input->post('valor_inicial'),
+            );
+            // print_r($contrato);
+            
+            //Estos datos se insertan en la tabla contratos mediante este modelo
+            $this->contrato_model->registrar_solicitud($contrato);
+
+            // Se consulta los datos de la solicitud
+            $solicitud = $this->contrato_model->ver_solicitud($id_solicitud);
+
+            //Se usa el modelo para la acci&oacute;n de auditor&iacute;a
+            $this->auditoria_model->insertar_solicitud_contrato($id_solicitud);
+
+            /**
+             * Subida de archivo
+             */
+            //Se realiza la subida
+            array('upload_data' => $this->upload->data());
+
+            /**
+             * Construcción del correo electrónico
+             */
+            // Cuerpo
+            $cuerpo = $this->session->userdata('Nombres')." ".$this->session->userdata('Apellidos')." ha solicitado crear un contrato con las siguientes características:<br><br>";
+            $cuerpo .= "<fieldset style='border-color: #9FCB79'><legend style='border-color: #9FCB79'><b>Contrato para {$solicitud->Contratista}</b><br></legend>";
+            $cuerpo .= "$solicitud->Objeto<br>";
+            $cuerpo .= "<b>Inicia:</b> $solicitud->Fecha_Inicial | <b>Plazo:</b> $solicitud->Plazo días<br>";
+            $cuerpo .= "</fieldset><br>";
+            $cuerpo .= "Adjunto se encuentra el archivo con las cantidades, el cual podrá descargar e ingresarlo dentro de la documentación.<br><br>";
+
+            // Se consultan los usuarios a los que se le enviará el correo
+            $usuarios = $this->auditoria_model->cargar_usuarios_correo(7);
+
+            // Se agrega el correo de quien creó la solicitud
+            array_push($usuarios, $this->session->userdata('Email'));
+            // print_r($usuarios);
+
+            //Se ejecuta el modelo que envía el correo
+            echo $this->email_model->enviar($usuarios, "Nueva solicitud de contrato", $cuerpo, array("adjunto" => $this->ruta_solicitudes."Solicitud_$id_solicitud.xlsx"));
+            
+            //Se usa el modelo para la acci&oacute;n de auditoría
+            $this->auditoria_model->insertar_solicitud_contrato($id_solicitud);
+
+            // $this->ver_solicitudes();
+        }
+
+
+    } // agregar_solicitud
     
     /**
     * Funci&oacute;n que se encarga de mostrar un contrato existente

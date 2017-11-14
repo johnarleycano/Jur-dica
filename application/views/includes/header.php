@@ -108,6 +108,24 @@
                         </li>
                          -->
 
+                        <!-- Si tiene permiso -->
+                        <?php if (isset($permisos[31])) { ?>
+
+                            <li><a href="<?php echo site_url('contrato/ver_solicitudes'); ?>"><span>Solicitudes</span></a>
+                                <ul class="menuDrpDwn">
+                                    <!-- Si tiene permiso -->
+                                    <?php if (isset($permisos[30])) { ?>
+                                        <li><a href="<?php echo site_url('contrato/solicitar'); ?>">Solicitar contrato</a></li>
+                                    <?php } ?>
+
+                                    <!-- Si tiene permiso -->
+                                    <?php if (isset($permisos[31])) { ?>
+                                        <li><a href="<?php echo site_url('contrato/ver_solicitudes'); ?>">ver solicitudes</a></li>
+                                    <?php } ?>
+                                </ul> 
+                            </li>
+                        <?php } ?>
+
                         <li>
                             <a href="#"><span>Administración</span></a>
                             <ul class="menuDrpDwn">

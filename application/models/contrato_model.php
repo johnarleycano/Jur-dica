@@ -17,7 +17,18 @@ Class Contrato_model extends CI_Model{
         //Se insertan los datos principales del contrato
         $this->db->insert('contratos', $contrato);
     }//Fin registrar_contrato
+
+    /**
+    * Guarda en la base de datos los datos de la solicitud de contrato.
+    *
+    * @access   public
+    * @return   
+    */
+        //Se insertan los datos principales del contrato
+    function registrar_solicitud($contrato){
+        $this->db->insert('contratos_solicitudes', $contrato);
     
+    }//Fin registrar_solicitud
     /**
     * Actualiza en la base de datos los datos del contrato.
     *
@@ -117,13 +128,27 @@ Class Contrato_model extends CI_Model{
     /**
     * Retorna el id del contrato que se acaba de crear.
     *
+    * @access   
+    * @param    
+    * @param    
+    * @return   
+    */
+    function obtener_id_contrato(){
+        return @mysql_insert_id($this->Pk_Id_Contrato);
+    }//Fin obtener_id_contrato()
+    
+    /**
+    * Retorna el id para la siguiente solicitud de contrato creado
+    *
     * @access	
     * @param	
     * @param	
     * @return	
     */
-    function obtener_id_contrato(){
-        return @mysql_insert_id($this->Pk_Id_Contrato);
+    function consultar_id_solicitud(){
+        $this->db->select_max('Pk_Id_Contrato_Solicitud');
+        $resultado = $this->db->get('contratos_solicitudes')->row();
+        return $resultado->Pk_Id_Contrato_Solicitud;
     }//Fin obtener_id_contrato()
     
     /**
@@ -192,7 +217,26 @@ Class Contrato_model extends CI_Model{
         return $this->db->query($sql)->result();
 
 
-    }//Fin listar_contratos
+    }//Fin listar_contratos}
+
+    function ver_solicitud($id_solicitud){
+        // Consulta
+        $sql =
+        "SELECT
+            t.Nombre AS Contratista,
+            s.Objeto,
+            s.Fecha_Inicial,
+            s.Plazo,
+            s.Valor_Inicial 
+        FROM
+            contratos_solicitudes AS s
+            INNER JOIN tbl_terceros AS t ON s.Fk_Id_Terceros = t.Pk_Id_Terceros 
+        WHERE
+            s.Pk_Id_Contrato_Solicitud = $id_solicitud";
+
+        //Se retorna la consulta
+        return $this->db->query($sql)->row();
+    }
 
 
     function listar_contratos_acta_word($id_contrato){

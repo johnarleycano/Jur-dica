@@ -67,10 +67,10 @@ Class Archivos extends CI_Controller{
      */
     function subir(){
         //Se obtiene el numero de contrato
-        $numero_contrato = $this->uri->segment(3);        
+        $numero_contrato = $this->uri->segment(3);
         //Se obtiene la serie para nombrar el archivo
         $serie = $this->input->post('subcategoria');
-        echo $numero_factura = $this->input->post('numero_factura');
+        $numero_factura = $this->input->post('numero_factura');
         $fact = 'fact_No';
         $acta = 'acta_No';
         
@@ -95,7 +95,7 @@ Class Archivos extends CI_Controller{
             if($serie == '16 Otrosi' or $serie == '14 Acta Obra' or $serie == '15 Factura'){
                 $config['overwrite'] = FALSE;                                   //No Sobreescribe el archivo si ya existe
             }else{
-                $config['overwrite'] = TRUE;                                   //Sobreescribe el archivo si ya existe
+                $config['overwrite'] = TRUE;                                   // Sobreescribe el archivo si ya existe
             }
 
             if($serie == '15 Factura' and $numero_factura !=''){
