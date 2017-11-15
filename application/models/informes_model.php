@@ -213,6 +213,35 @@ Class Informes_model extends CI_Model{
     }//Fin 
 
     /**
+    * Consulta los contratos que no tienen acta de inicio
+    * 
+    * @access   private
+    */
+    function no_acta_inicio(){
+        $sql = 
+        "SELECT
+            c.Numero,
+            c.Objeto,
+            t.Nombre AS Contratista,
+            c.Fecha_Inicial,
+            c.Fecha_Vencimiento,
+            c.Valor_Inicial,
+            e.Estado 
+        FROM
+            contratos AS c
+            INNER JOIN tbl_terceros AS t ON c.Fk_Id_Terceros = t.Pk_Id_Terceros
+            INNER JOIN tbl_estados AS e ON c.Fk_Id_Estado = e.Pk_Id_Estado 
+        WHERE
+            c.Acta_Inicio IS FALSE 
+            AND e.Pk_Id_Estado <> 2 
+        ORDER BY
+            Numero ASC";
+        
+        //Se retorna la consulta
+        return $this->db->query($sql)->result();
+    }//Fin no_acta_inicio()
+
+    /**
     * Retorna el nombre del usuario especifico
     *
     * @access   public

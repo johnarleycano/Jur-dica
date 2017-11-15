@@ -37,11 +37,10 @@ Class Email extends CI_Controller{
          * Se llaman todos los métodos para que se invoque automáticamente
          * todos los correos desde solo un lugar
          */
-        // $this->contratos_en_vencimiento();
+        $this->contratos_en_vencimiento();
         $this->contratos_pendientes_devolucion_retenido();
         $this->polizas_en_vencimiento();
         $this->polizas_vencidas();
-        $this->no_acta_inicio();
     }//Fin index
     
     /**
@@ -203,46 +202,6 @@ Class Email extends CI_Controller{
         //Mensaje de &eacute;xito
         echo 'El mensaje de p&oacute;lizas vencidas se ha enviado correctamente<br/>';
     }//Fin polizas_vencidas()
-    
-    /**
-     * Verifica los contratos que No tienen acta de inicio
-     * 
-     * @access	public
-     */
-    function no_acta_inicio(){
-        //Se carga el modelo
-        $contratos = $this->email_model->no_acta_inicio();
-
-        // Cuerpo
-        $cuerpo = "";
-
-        // Se recorren los contratos
-        foreach($contratos as $contrato):
-            $cuerpo .= "<fieldset style='border-color: #9FCB79'><legend style='border-color: #9FCB79'><b>Contrato $contrato->Numero ($contrato->Contratista)</b></legend>";
-            $cuerpo .= "$contrato->Objeto<br>";
-            $cuerpo .= "<b>Inicia:</b> $contrato->Fecha_Inicial | <b>Finaliza:</b> $contrato->Fecha_Vencimiento";
-            $cuerpo .= "</fieldset><br><br>";
-        endforeach;
-
-        //Se define el asunto
-        $asunto = "Contratos sin acta de inicio";
-
-        //Se verifica, si hay datos se env&iacute;a la tabla
-        if(count($contratos) > 0){
-            $mensaje = "Este es el listado de los contratos que no tienen acta de inicio:<br> <p>$cuerpo</p>";
-        }else{
-            $mensaje = "A la fecha no hay contratos sin acta de inicio.<br>";
-        } // if
-
-        // Se consultan los usuarios a los que se le enviará el correo
-        $usuarios = $this->auditoria_model->cargar_usuarios_correo(6);
-
-        //Se ejecuta el modelo que envía el correo
-        $this->email_model->enviar($usuarios, $asunto, $mensaje);
-        
-        //Mensaje de &eacute;xito
-        echo 'El mensaje de contratos sin acta de inicio se ha enviado correctamente<br/>';
-    }//Fin no_acta_inicio
 }//Fin email
 /* End of file email.php */
 /* Location: ./contratos/application/controllers/email.php */

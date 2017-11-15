@@ -217,8 +217,8 @@ Class Contrato_model extends CI_Model{
         return $this->db->query($sql)->result();
 
 
-    }//Fin listar_contratos}
-
+    }//Fin listar_contratos
+    
     function ver_solicitudes($id_solicitud = null){
         $id = ($id_solicitud) ? "WHERE s.Pk_Id_Contrato_Solicitud = $id_solicitud" : "" ;
         // Consulta

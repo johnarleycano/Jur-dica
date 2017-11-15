@@ -176,35 +176,6 @@ Class Email_model extends CI_Model{
         //Se retorna la consulta
         return $this->db->query($sql)->result(); 
     }//Fin polizas_vencidas()
-    
-    /**
-    * Env&iacute;a los correos electr&oacute;nicos
-    * 
-    * @access	private
-    */
-    function no_acta_inicio(){
-        $sql = 
-        "SELECT
-            c.Numero,
-            c.Objeto,
-            t.Nombre AS Contratista,
-            c.Fecha_Inicial,
-            c.Fecha_Vencimiento,
-            c.Valor_Inicial,
-            e.Estado 
-        FROM
-            contratos AS c
-            INNER JOIN tbl_terceros AS t ON c.Fk_Id_Terceros = t.Pk_Id_Terceros
-            INNER JOIN tbl_estados AS e ON c.Fk_Id_Estado = e.Pk_Id_Estado 
-        WHERE
-            c.Acta_Inicio IS FALSE 
-            AND e.Pk_Id_Estado <> 2 
-        ORDER BY
-            Numero ASC";
-        
-        //Se retorna la consulta
-        return $this->db->query($sql)->result();
-    }//Fin no_acta_inicio()
 }//Fin email
 /* End of file email_model.php */
 /* Location: ./contratos/application/controllers/email_model.php */

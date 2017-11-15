@@ -1,6 +1,6 @@
 <?php
 //Se carga el modelo
-$contratos = $this->email_model->no_acta_inicio();
+$contratos = $this->informes_model->no_acta_inicio();
 
 //Se crea un nuevo objeto PHPExcel
 $objPHPExcel = new PHPExcel();
