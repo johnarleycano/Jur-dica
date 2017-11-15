@@ -18,6 +18,7 @@ echo form_open('contrato/agregar_contrato');
         echo form_error('localizacion_contrato');
         echo form_error('estados_contratos');
         echo form_error('valor_inicial');
+        echo form_error('fecha_inicial');
         echo form_error('plazo');
         echo form_error('porcentaje_avance');
         ?>
@@ -39,8 +40,12 @@ echo form_open('contrato/agregar_contrato');
                 <tr>
                     <td><?php echo form_label('N&uacute;mero de contrato*', 'numero_contrato'); ?></td>
                     <td><?php echo form_input(array('name' => 'numero_contrato', 'id' => 'numero_contrato', 'style' => 'text-align: right', 'value' => set_value('numero_contrato'))) ?></td>                    
+                </tr>
+                <tr>
                     <td><?php echo form_label('Contratista*', 'contratista'); ?></td>
                     <td><?php echo form_dropdown('contratista', $_contratista, set_value('contratista')); ?></td>
+                    <td style="font-size: 0.8em; color: #0B37B0;"><?php echo form_label('Agregar contratista', 'nuevo_contratista') ?></td>
+                    <td><?php echo form_input(array('name' => 'nuevo_contratista', 'id' => 'nuevo_contratista', 'value' => set_value('nuevo_contratista'))); ?></td>
                 </tr>
                 <tr>
                     <?php 
@@ -53,11 +58,23 @@ echo form_open('contrato/agregar_contrato');
                     <td><?php echo form_label('Centro de Costos', 'centro_costo'); ?></td>
                     <td><?php echo form_dropdown('centro_costo', $_centrocostos); ?></td>
                 </tr>
+                <!-- Si es un contrato para crearlo, asociando una solicitud -->
+                <?php if ($this->uri->segment(3) == "nueva_solicitud") { ?>
+                    <tr>
+                        <?php 
+                            $_solicitudes = array('' => null);
+                            //Recorrido para traer todos los estados de la base de datos y agregarlos en el dropdown
+                            foreach ($solicitudes_pendientes as $solicitud):
+                                $_solicitudes[$solicitud->Pk_Id_Contrato_Solicitud] = "Solicitud $solicitud->Pk_Id_Contrato_Solicitud - $solicitud->Solicitante";
+                            endforeach;
+                        ?>
+                        <td><?php echo form_label('Asociar solicitud', 'solicitud'); ?></td>
+                        <td><?php echo form_dropdown('solicitud', $_solicitudes); ?></td>
+                    </tr>
+                <?php } ?>
                 <tr>
                     <td><?php echo form_label('Objeto del contrato*', 'objeto_contrato'); ?></td>
                     <td></td>
-                    <td style="font-size: 0.8em; color: #0B37B0;"><?php echo form_label('Agregar nuevo', 'nuevo_contratista') ?></td>
-                    <td><?php echo form_input(array('name' => 'nuevo_contratista', 'id' => 'nuevo_contratista', 'value' => set_value('nuevo_contratista'))); ?></td>
                 </tr>
                 <tr>
                     <td colspan="2"><?php echo form_textarea(array('class' => 'textarea_actualizar1', 'style' => 'height: 200px;', 'name' => 'objeto_contrato', 'id' => 'objeto_contrato', 'value' => set_value('objeto_contrato'))); ?></td>
@@ -116,7 +133,7 @@ echo form_open('contrato/agregar_contrato');
                 <tr>
                     <td><?php echo form_label('Valor Inicial', 'valor_inicial'); ?></td>
                     <td><?php echo form_input(array('name' => 'valor_inicial', 'id' => 'valor_inicial', 'style' => 'text-align: right', 'value' => set_value('valor_inicial'))); ?></td>
-                    <td><?php echo form_label('Fecha Inicial', 'fecha_inicial'); ?></td>
+                    <td><?php echo form_label('Fecha Inicial *', 'fecha_inicial'); ?></td>
                     <td><?php echo form_input(array('name' => 'fecha_inicial', 'id' => 'fecha_inicial', 'readonly' => 'readonly', 'value' => set_value('fecha_inicial'))); ?></td>
                 </tr>
                 <tr>
@@ -126,7 +143,7 @@ echo form_open('contrato/agregar_contrato');
                     <td><?php echo form_input(array('name' => 'fecha_acta', 'id' => 'fecha_acta', 'readonly' => 'readonly','value' => set_value('fecha_acta'))); ?></td>
                 </tr>
                 <tr>
-                    <td><?php echo form_label('Plazo (d&iacute;as)', 'plazo'); ?></td>
+                    <td><?php echo form_label('Plazo (d&iacute;as) *', 'plazo'); ?></td>
                     <td><?php echo form_input(array('name' => 'plazo', 'id' => 'plazo', 'style' => 'text-align:right', 'value' => set_value('plazo'))); ?></td>
                     <td><?php echo form_label('Porcentaje de avance', 'porcentaje_avance'); ?></td>
                     <td><?php echo form_input(array('name' => 'porcentaje_avance', 'id' => 'porcentaje_avance', 'style' => 'text-align:right', 'value' => set_value('porcentaje_avance'))); ?></td>
@@ -322,3 +339,22 @@ echo form_open('contrato/agregar_contrato');
     echo form_close();
     ?>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        if ("<?php echo $this->uri->segment(3); ?>" == "nueva_solicitud") {
+            // Se consultan los datos de la solicitud
+            solicitud = ajax("<?php echo site_url('contrato/cargar_solicitud') ?>", {"id_solicitud": "<?php echo $this->uri->segment(4); ?>"}, "JSON");
+
+            // Se rellenan los campos que se llenaron previamente
+            $("select[name='solicitud']").val(solicitud.Pk_Id_Contrato_Solicitud)
+            $("select[name='contratista']").val(solicitud.Fk_Id_Terceros)
+            $("select[name='centro_costo']").val(solicitud.Fk_Id_Terceros_Centro_Costos)
+            $("textarea[name='objeto_contrato']").val(solicitud.Objeto)
+            $("input[name='fecha_inicial']").val(solicitud.Fecha_Inicial)
+            $("input[name='plazo']").val(solicitud.Plazo)
+            $("input[name='valor_inicial']").val(solicitud.Valor_Inicial)
+        }
+
+    });
+</script>       

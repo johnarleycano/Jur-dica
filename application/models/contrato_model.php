@@ -219,25 +219,56 @@ Class Contrato_model extends CI_Model{
 
     }//Fin listar_contratos}
 
-    function ver_solicitud($id_solicitud){
+    function ver_solicitudes($id_solicitud = null){
+        $id = ($id_solicitud) ? "WHERE s.Pk_Id_Contrato_Solicitud = $id_solicitud" : "" ;
         // Consulta
         $sql =
         "SELECT
+            s.Pk_Id_Contrato_Solicitud,
             t.Nombre AS Contratista,
             s.Objeto,
+            s.Fecha_Creacion,
             s.Fecha_Inicial,
+            s.Fk_Id_Terceros_Centro_Costos,
+            s.Fk_Id_Terceros,
             s.Plazo,
-            s.Valor_Inicial 
+            s.Valor_Inicial,
+            concat( u.Nombres, '', u.Apellidos ) AS Solicitante,
+            ( SELECT cc.Numero FROM contratos AS cc WHERE cc.Fk_Id_Solicitud_Contrato = s.Pk_Id_Contrato_Solicitud LIMIT 0, 1 ) AS Numero_Contrato,
+            ( SELECT cc.Pk_Id_Contrato FROM contratos AS cc WHERE cc.Fk_Id_Solicitud_Contrato = s.Pk_Id_Contrato_Solicitud LIMIT 0, 1 ) AS Fk_Id_Contrato,
+            tc.Nombre AS Tipo_Contrato 
         FROM
             contratos_solicitudes AS s
-            INNER JOIN tbl_terceros AS t ON s.Fk_Id_Terceros = t.Pk_Id_Terceros 
-        WHERE
-            s.Pk_Id_Contrato_Solicitud = $id_solicitud";
+            INNER JOIN tbl_terceros AS t ON s.Fk_Id_Terceros = t.Pk_Id_Terceros
+            INNER JOIN tbl_usuarios AS u ON s.Fk_Id_Usuario = u.Pk_Id_Usuario
+            INNER JOIN tbl_tipos_contratos AS tc ON s.Fk_Id_Tipo_Contrato = tc.Pk_Id_Tipo_Contrato 
+            $id
+        ORDER BY
+            s.Fecha_Inicial ASC";
 
         //Se retorna la consulta
-        return $this->db->query($sql)->row();
+        if ($id_solicitud) {
+            return $this->db->query($sql)->row();
+        } else {
+            return $this->db->query($sql)->result();
+        }
     }
 
+    function ver_solicitudes_pendientes(){
+        $sql =
+        "SELECT
+            cs.Pk_Id_Contrato_Solicitud,
+            CONCAT( u.Nombres, ' ', u.Apellidos ) AS Solicitante 
+        FROM
+            contratos_solicitudes AS cs
+            INNER JOIN tbl_usuarios AS u ON cs.Fk_Id_Usuario = u.Pk_Id_Usuario 
+        WHERE
+            ( SELECT Count( cc.Pk_Id_Contrato ) FROM contratos AS cc WHERE cc.Fk_Id_Solicitud_Contrato = cs.Pk_Id_Contrato_Solicitud LIMIT 0, 1 ) = 0 
+        ORDER BY
+            cs.Fecha_Inicial ASC";
+
+        return $this->db->query($sql)->result();
+    }
 
     function listar_contratos_acta_word($id_contrato){
         //Esta validaci&oacute;n verifica si llega algun valor en el id, con el

@@ -49,6 +49,8 @@ Class Contrato extends CI_Controller{
      * @access	public
      */
     function index(){
+        //Se traen todas las solicitudes de contratos que no tienen ningún cotnrato asociado
+        $this->data['solicitudes_pendientes'] = $this->contrato_model->ver_solicitudes_pendientes();
         //Se traen los estados de los contratos
         $this->data['contratos_estados'] = $this->contrato_model->listar_contratos_estados();
         //Se traen los contratantes
@@ -117,7 +119,8 @@ Class Contrato extends CI_Controller{
         $this->form_validation->set_rules('localizacion_contrato', 'La localizaci&oacute;n del contrato', 'required|trim');
         $this->form_validation->set_rules('estados_contratos', 'El estado del contrato', 'required|trim');
         $this->form_validation->set_rules('valor_inicial', 'El valor inicial del contrato', 'numeric|trim');
-        $this->form_validation->set_rules('plazo', 'El plazo', 'numeric|trim');
+        $this->form_validation->set_rules('fecha_inicial', 'La fecha inicial', 'required|trim');
+        $this->form_validation->set_rules('plazo', 'El plazo', 'required|numeric|trim');
         $this->form_validation->set_rules('porcentaje_avance', 'El porcentaje de avance', 'numeric|trim');
         
         //Mensajes que se muestran cuando no se supera la validaci&oacute;n
@@ -182,7 +185,8 @@ Class Contrato extends CI_Controller{
                 'Porcentaje_Avance' => $this->input->post('porcentaje_avance'),
                 'Acta_Inicio' => $this->input->post('acta_inicio'),
                 'Fecha_Acta_Inicio' => $this->input->post('fecha_acta'),
-                'Fk_id_Usuario' => $this->session->userdata('Pk_Id_Usuario'),
+                'Fk_Id_Solicitud_Contrato' => $this->input->post('solicitud'),
+                'Fk_Id_Usuario' => $this->session->userdata('Pk_Id_Usuario'),
                 'Fk_Id_Terceros_Contratante' => $this->input->post('contratante'),
                 'Fk_Id_Terceros_CentrodeCostos' => $this->input->post('centro_costo'),
                 'Fk_Id_Terceros' => $id_contratista
@@ -310,12 +314,6 @@ Class Contrato extends CI_Controller{
         // Se consulta el id de la última solicitud creada
         $id_solicitud = $this->contrato_model->consultar_id_solicitud() + 1;
 
-        // $this->load->helper('file');
-
-          
-
-        // $this->form_validation->set_rules('userfile', '', 'callback_file_check');
-
         // Datos del archivo a subir
         $config['overwrite'] = FALSE;
         $config['upload_path'] = $this->ruta_solicitudes;
@@ -386,7 +384,7 @@ Class Contrato extends CI_Controller{
             $this->contrato_model->registrar_solicitud($contrato);
 
             // Se consulta los datos de la solicitud
-            $solicitud = $this->contrato_model->ver_solicitud($id_solicitud);
+            $solicitud = $this->contrato_model->ver_solicitudes($id_solicitud);
 
             //Se usa el modelo para la acci&oacute;n de auditor&iacute;a
             $this->auditoria_model->insertar_solicitud_contrato($id_solicitud);
@@ -421,7 +419,9 @@ Class Contrato extends CI_Controller{
             //Se usa el modelo para la acci&oacute;n de auditoría
             $this->auditoria_model->insertar_solicitud_contrato($id_solicitud);
 
-            // $this->ver_solicitudes();
+            //Se establece el mensaje de exito
+            $this->data['mensaje_exito'] = "La solicitud se ha creado correctamente.";
+            $this->ver_solicitudes();
         }
 
 
@@ -460,6 +460,28 @@ Class Contrato extends CI_Controller{
         //se carga el template
         $this->load->view('includes/template', $this->data);
     }//Fin ver()
+
+    /**
+    * Funci&oacute;n que se encarga de mostrar un contrato existente
+    * 
+    * @access   public
+    */
+    function ver_solicitudes(){
+        //Se obtiene mediante la url el n&uacute;mero del contrato
+        $id_contrato = $this->uri->segment(3);
+        //Se traen todas las solicitudes
+        $this->data['solicitudes'] = $this->contrato_model->ver_solicitudes();
+        //se establece el titulo de la p&aacute;gina
+        $this->data['titulo'] = 'Solicitudes de contratos';
+        //se establece la vista que tiene el contenido principal
+        $this->data['contenido_principal'] = 'contrato/ver_solicitudes_view';
+        //se carga el template
+        $this->load->view('includes/template', $this->data);
+    }//Fin ver()
+
+    function cargar_solicitud(){
+        print json_encode($this->contrato_model->ver_solicitudes($this->input->post("id_solicitud")));
+    }
 }//Fin contrato
 /* End of file contrato.php */
 /* Location: ./contratos/application/controllers/contrato.php */
