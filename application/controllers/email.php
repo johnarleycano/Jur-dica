@@ -37,12 +37,12 @@ Class Email extends CI_Controller{
          * Se llaman todos los métodos para que se invoque automáticamente
          * todos los correos desde solo un lugar
          */
-        $this->contratos_en_vencimiento();
-        $this->contratos_vencidos();
-        $this->polizas_en_vencimiento();
-        $this->polizas_vencidas();
-        $this->pagos_excedidos();
-        $this->no_acta_inicio();
+        // $this->contratos_en_vencimiento();
+        $this->contratos_pendientes_devolucion_retenido();
+        // $this->polizas_en_vencimiento();
+        // $this->polizas_vencidas();
+        // $this->pagos_excedidos();
+        // $this->no_acta_inicio();
     }//Fin index
     
     /**
@@ -90,9 +90,9 @@ Class Email extends CI_Controller{
      * 
      * @access	private
      */
-    function contratos_vencidos(){
-        //Se carga el modelo que trae los contratos vencidos
-        $contratos = $this->email_model->contratos_vencidos();
+    function contratos_pendientes_devolucion_retenido(){
+        //Se carga el modelo que trae los contratos pendientes por devolución de retenido
+        $contratos = $this->email_model->contratos_pendientes_devolucion_retenido();
 
         // Cuerpo
         $cuerpo = "";
@@ -106,13 +106,13 @@ Class Email extends CI_Controller{
         endforeach;
 
         //Se define el asunto
-        $asunto = "Contratos vencidos";
+        $asunto = "Contratos pendientes por devolución de retenido";
         
         //Se verifica, si hay datos se env&iacute;a la tabla
         if(count($contratos) > 0){
-            $mensaje = "Este es el listado de los contratos que están vencidos a la fecha:<br> <p>$cuerpo</p>";
+            $mensaje = "Este es el listado de los contratos que están pendientes por devolución de retenido a la fecha:<br> <p>$cuerpo</p>";
         }else{
-            $mensaje =  "A la fecha no hay contratos vencidos.<br>";
+            $mensaje =  "A la fecha no hay contratos pendientes por devolución de retenido.<br>";
         }
         
         // Se consultan los usuarios a los que se le enviará el correo
@@ -122,8 +122,8 @@ Class Email extends CI_Controller{
         $this->email_model->enviar($usuarios, $asunto, $mensaje);
         
         //Mensaje de éxito
-        echo 'El mensaje de contratos vencidos se ha enviado correctamente<br/>';
-    }//Fin contratos_vencidos()
+        echo 'El mensaje de contratos pendientes por devolución de retenido se ha enviado correctamente<br/>';
+    }//Fin contratos_pendientes_devolucion_retenido()
     
     /**
      * Verifica las p&oacute;lizas que est&eacute;n a punto de vencerse.

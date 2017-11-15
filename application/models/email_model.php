@@ -96,7 +96,7 @@ Class Email_model extends CI_Model{
     * 
     * @access	private
     */
-    function contratos_vencidos(){
+    function contratos_pendientes_devolucion_retenido(){
         $sql = 
         'SELECT
             c.Numero,
@@ -115,7 +115,7 @@ Class Email_model extends CI_Model{
         
         //Se retorna la consulta
         return $this->db->query($sql)->result(); 
-    }//Fin contratos_vencidos
+    }//Fin contratos_pendientes_devolucion_retenido
     
     /**
     * Envía los correos electrónicos
