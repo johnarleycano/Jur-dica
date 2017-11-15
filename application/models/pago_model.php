@@ -113,36 +113,4 @@ Class Pago_model extends CI_Model{
         //Se retorna la consulta
         return $this->db->query($sql)->result();
     }//Fin estado_pagos_contrato()
-    
-    function pagos_excedidos(){
-        //Consulta
-        $sql =
-        "SELECT
-            c.Pk_Id_Contrato,
-            c.Numero Numero_Contrato,
-            c.Objeto,
-            t.Nombre AS Contratista,
-            c.Valor_Inicial,
-            ( SELECT IFNULL( SUM( contratos_adiciones.Valor ), 0 ) FROM contratos_adiciones WHERE contratos_adiciones.Fk_Id_Contrato = c.Pk_Id_Contrato ) AS Adiciones,
-            c.Valor_Inicial + ( SELECT IFNULL( SUM( contratos_adiciones.Valor ), 0 ) FROM contratos_adiciones WHERE contratos_adiciones.Fk_Id_Contrato = c.Pk_Id_Contrato ) AS Valor_Total,
-            Sum( cp.Valor_Pago ) AS Pagado,
-            (
-            SUM( cp.Valor_Pago ) - (
-            c.Valor_Inicial + ( SELECT IFNULL( SUM( contratos_adiciones.Valor ), 0 ) FROM contratos_adiciones WHERE contratos_adiciones.Fk_Id_Contrato = c.Pk_Id_Contrato ) 
-            ) 
-            ) AS Excedido 
-        FROM
-            contratos AS c
-            INNER JOIN contratos_pagos AS cp ON cp.Fk_Id_Contratos = c.Pk_Id_Contrato
-            INNER JOIN tbl_terceros AS t ON c.Fk_Id_Terceros = t.Pk_Id_Terceros 
-        WHERE
-            c.Fk_Id_Estado <> 2 
-        GROUP BY
-            c.Numero 
-        ORDER BY
-            c.Numero ASC";
-        
-        //Se retorna la consulta
-        return $this->db->query($sql)->result();
-    }//Finpagos_excedidos()
 }//Fin pago_model

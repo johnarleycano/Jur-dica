@@ -39,10 +39,9 @@ Class Email extends CI_Controller{
          */
         // $this->contratos_en_vencimiento();
         $this->contratos_pendientes_devolucion_retenido();
-        // $this->polizas_en_vencimiento();
-        // $this->polizas_vencidas();
-        // $this->pagos_excedidos();
-        // $this->no_acta_inicio();
+        $this->polizas_en_vencimiento();
+        $this->polizas_vencidas();
+        $this->no_acta_inicio();
     }//Fin index
     
     /**
@@ -204,55 +203,6 @@ Class Email extends CI_Controller{
         //Mensaje de &eacute;xito
         echo 'El mensaje de p&oacute;lizas vencidas se ha enviado correctamente<br/>';
     }//Fin polizas_vencidas()
-    
-    /**
-     * Verifica los contratos que tengan pagos mayores al valor del contrato.
-     * 
-     * @access	private
-     */
-    function pagos_excedidos(){
-        //Se carga el modelo
-        $pagos = $this->pago_model->pagos_excedidos();
-
-        // Cuerpo
-        $cuerpo = "";
-
-        // Contador
-        $cont = 0;
-
-        // Se recorren los pagos
-        foreach ($pagos as $pago):
-            // Si el pago es excedido
-            if($pago->Excedido > 0){
-                $cuerpo .= "<fieldset style='border-color: #9FCB79'><legend style='border-color: #9FCB79'><b>Contrato $pago->Numero_Contrato ($pago->Contratista)</b> </legend>";
-                $cuerpo .= "$pago->Objeto<br>";
-                $cuerpo .= "<b>Total:</b> $".number_format($pago->Valor_Total, 0, '', '.')." | <b>Pagado:</b> $".number_format($pago->Pagado, 0, '', '.')." | <span style='color: red;'>Excedido en <b>$".number_format($pago->Excedido, 0, '', '.')."</b></span><br>";
-                $cuerpo .= "</fieldset><br>";
-
-                // Aumenta el contador
-                $cont++;
-            } // if
-        endforeach;
-
-        //Se define el asunto
-        $asunto = "Pagos excedidos a contratos";
-
-        //Se verifica, si hay datos se envían
-        if($cont > 0){
-            $mensaje = "Este es el listado de los contratos que tienen pagos que van por encima de su valor y aun no han sido liquidados:<br> <p>$cuerpo</p>";
-        }else{
-            $mensaje = "A la fecha no hay ningún pago que exceda el valor de un contrato.<br>";
-        } // if
-
-        // Se consultan los usuarios a los que se le enviará el correo
-        $usuarios = $this->auditoria_model->cargar_usuarios_correo(5);
-
-        //Se ejecuta el modelo que envía el correo
-        $this->email_model->enviar($usuarios, $asunto, $mensaje);
-
-        //Mensaje de &eacute;xito
-        echo 'El mensaje de pagos excedidos a contratos se ha enviado correctamente<br/>';
-    }//Fin pagos_excedidos
     
     /**
      * Verifica los contratos que No tienen acta de inicio
