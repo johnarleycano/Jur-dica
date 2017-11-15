@@ -109,7 +109,7 @@ Class Email extends CI_Controller{
         
         //Se verifica, si hay datos se env&iacute;a la tabla
         if(count($contratos) > 0){
-            $mensaje = "Este es el listado de los contratos que están pendientes por devolución de retenido a la fecha:<br> <p>$cuerpo</p>";
+            $mensaje = "Este es el listado de los contratos que están pendientes por devolución de retenido o legalización a la fecha:<br> <p>$cuerpo</p>";
         }else{
             $mensaje =  "A la fecha no hay contratos pendientes por devolución de retenido.<br>";
         }

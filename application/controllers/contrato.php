@@ -414,7 +414,7 @@ Class Contrato extends CI_Controller{
             // print_r($usuarios);
 
             //Se ejecuta el modelo que envía el correo
-            echo $this->email_model->enviar($usuarios, "Nueva solicitud de contrato", $cuerpo, array("adjunto" => $this->ruta_solicitudes."Solicitud_$id_solicitud.xlsx"));
+            $this->email_model->enviar($usuarios, "Nueva solicitud de contrato", $cuerpo, array("adjunto" => $this->ruta_solicitudes."Solicitud_$id_solicitud.xlsx"));
             
             //Se usa el modelo para la acci&oacute;n de auditoría
             $this->auditoria_model->insertar_solicitud_contrato($id_solicitud);
