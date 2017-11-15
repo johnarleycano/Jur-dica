@@ -176,6 +176,29 @@ Class Email_model extends CI_Model{
         //Se retorna la consulta
         return $this->db->query($sql)->result(); 
     }//Fin polizas_vencidas()
+
+    function solicitudes_pendientes(){
+        $sql =
+        "SELECT
+            cs.Pk_Id_Contrato_Solicitud,
+            CONCAT( u.Nombres, ' ', u.Apellidos ) AS Solicitante,
+            tc.Nombre AS Tipo_Contrato,
+            t.Nombre AS Contratista,
+            cs.Objeto,
+            cs.Valor_Inicial,
+            cs.Fecha_Inicial
+        FROM
+            contratos_solicitudes AS cs
+            INNER JOIN tbl_usuarios AS u ON cs.Fk_Id_Usuario = u.Pk_Id_Usuario
+            INNER JOIN tbl_tipos_contratos AS tc ON cs.Fk_Id_Tipo_Contrato = tc.Pk_Id_Tipo_Contrato
+            INNER JOIN tbl_terceros AS t ON cs.Fk_Id_Terceros = t.Pk_Id_Terceros 
+        WHERE
+            ( SELECT Count( cc.Pk_Id_Contrato ) FROM contratos AS cc WHERE cc.Fk_Id_Solicitud_Contrato = cs.Pk_Id_Contrato_Solicitud LIMIT 0, 1 ) = 0 
+        ORDER BY
+            cs.Fecha_Inicial ASC";
+
+        return $this->db->query($sql)->result();
+    } // solicitudes_pendientes
 }//Fin email
 /* End of file email_model.php */
 /* Location: ./contratos/application/controllers/email_model.php */

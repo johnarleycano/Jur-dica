@@ -37,10 +37,11 @@ Class Email extends CI_Controller{
          * Se llaman todos los métodos para que se invoque automáticamente
          * todos los correos desde solo un lugar
          */
-        $this->contratos_en_vencimiento();
-        $this->contratos_pendientes_devolucion_retenido();
-        $this->polizas_en_vencimiento();
-        $this->polizas_vencidas();
+        // $this->contratos_en_vencimiento();
+        $this->contratos_pendientes_por_crearse();
+        // $this->contratos_pendientes_devolucion_retenido();
+        // $this->polizas_en_vencimiento();
+        // $this->polizas_vencidas();
     }//Fin index
     
     /**
@@ -202,6 +203,47 @@ Class Email extends CI_Controller{
         //Mensaje de &eacute;xito
         echo 'El mensaje de p&oacute;lizas vencidas se ha enviado correctamente<br/>';
     }//Fin polizas_vencidas()
+
+    /**
+     * Verifica las solicitudes de contratos que aún no están
+     * asociadas a ningún contrato.
+     * 
+     * @access  private
+     */
+    function contratos_pendientes_por_crearse(){
+        $solicitudes = $this->email_model->solicitudes_pendientes();
+
+        // Cuerpo
+        $cuerpo = "";
+
+        // Se recorren las solicitudes
+        foreach($solicitudes as $solicitud):
+            $cuerpo .= "<fieldset style='border-color: #9FCB79'><legend style='border-color: #9FCB79'><b>Solicitud $solicitud->Pk_Id_Contrato_Solicitud (Por $solicitud->Solicitante)</b></legend>";
+            $cuerpo .= "<b>Contratista:</b> $solicitud->Contratista<br>";
+            $cuerpo .= "$solicitud->Objeto<br>";
+            $cuerpo .= "<b>Inicia:</b> $solicitud->Fecha_Inicial | <b>Valor:</b> $".number_format($solicitud->Valor_Inicial, 0, '', '.')."<br>";
+            $cuerpo .= "</fieldset><br>";
+        endforeach;
+        
+        // Se define el asunto
+        $asunto = "Contratos pendientes por crearse";
+
+        // Se verifica, si hay datos se envía la tabla
+        if(count($solicitudes) > 0){
+            $mensaje = "Este es el listado de solicitudes que aún no han sido creadas como contratos en el sistema:<br> <p>$cuerpo</p>";
+        }else{
+            $mensaje = "A la fecha no hay contratos pendientes por crearse.<br>";
+        } // if
+
+        // Se consultan los usuarios a los que se le enviará el correo
+        $usuarios = $this->auditoria_model->cargar_usuarios_correo(9);
+
+        //Se ejecuta el modelo que envía el correo
+        $this->email_model->enviar($usuarios, $asunto, $mensaje);
+
+        //Mensaje de éxito
+        echo 'El mensaje de contratos pendientes por crearse se ha enviado correctamente<br/>';
+    } // contratos_pendientes_por_crearse
 }//Fin email
 /* End of file email.php */
 /* Location: ./contratos/application/controllers/email.php */

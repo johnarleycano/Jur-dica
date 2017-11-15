@@ -50,7 +50,7 @@ Class Contrato extends CI_Controller{
      */
     function index(){
         //Se traen todas las solicitudes de contratos que no tienen ningún cotnrato asociado
-        $this->data['solicitudes_pendientes'] = $this->contrato_model->ver_solicitudes_pendientes();
+        $this->data['solicitudes_pendientes'] = $this->email_model->solicitudes_pendientes();
         //Se traen los estados de los contratos
         $this->data['contratos_estados'] = $this->contrato_model->listar_contratos_estados();
         //Se traen los contratantes

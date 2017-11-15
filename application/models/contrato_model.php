@@ -254,22 +254,6 @@ Class Contrato_model extends CI_Model{
         }
     }
 
-    function ver_solicitudes_pendientes(){
-        $sql =
-        "SELECT
-            cs.Pk_Id_Contrato_Solicitud,
-            CONCAT( u.Nombres, ' ', u.Apellidos ) AS Solicitante 
-        FROM
-            contratos_solicitudes AS cs
-            INNER JOIN tbl_usuarios AS u ON cs.Fk_Id_Usuario = u.Pk_Id_Usuario 
-        WHERE
-            ( SELECT Count( cc.Pk_Id_Contrato ) FROM contratos AS cc WHERE cc.Fk_Id_Solicitud_Contrato = cs.Pk_Id_Contrato_Solicitud LIMIT 0, 1 ) = 0 
-        ORDER BY
-            cs.Fecha_Inicial ASC";
-
-        return $this->db->query($sql)->result();
-    }
-
     function listar_contratos_acta_word($id_contrato){
         //Esta validaci&oacute;n verifica si llega algun valor en el id, con el
         //fin de filtrar la consulta por un solo id de contrato
