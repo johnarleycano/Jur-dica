@@ -83,7 +83,7 @@ Class Email_model extends CI_Model{
             contratos AS c
             INNER JOIN tbl_terceros AS t ON c.Fk_Id_Terceros = t.Pk_Id_Terceros 
         WHERE
-            ( ( c.Fecha_Vencimiento - CURDATE( ) ) BETWEEN 0 AND 15 ) 
+            ( ( c.Fecha_Vencimiento - CURDATE( ) ) BETWEEN 0 AND 20 ) 
         ORDER BY
             c.Fecha_Vencimiento ASC";
         
