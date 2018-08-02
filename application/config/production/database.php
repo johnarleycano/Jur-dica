@@ -64,6 +64,21 @@ $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
 
+$db['configuracion']['hostname'] = '192.168.0.12';
+$db['configuracion']['username'] = 'root';
+$db['configuracion']['password'] = 'D3v1m3d*';
+$db['configuracion']['database'] = 'configuracion';
+$db['configuracion']['dbdriver'] = 'mysqli';
+$db['configuracion']['dbprefix'] = '';
+$db['configuracion']['pconnect'] = TRUE;
+$db['configuracion']['db_debug'] = TRUE;
+$db['configuracion']['cache_on'] = FALSE;
+$db['configuracion']['cachedir'] = '';
+$db['configuracion']['char_set'] = 'utf8';
+$db['configuracion']['dbcollat'] = 'utf8_general_ci';
+$db['configuracion']['swap_pre'] = '';
+$db['configuracion']['autoinit'] = TRUE;
+$db['configuracion']['stricton'] = FALSE;
 
 /* End of file database.php */
 /* Location: ./application/config/database.php */
