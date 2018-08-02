@@ -70,6 +70,7 @@ Class Sesion extends CI_Controller{
             //Se traen los datos de la vista
             $usuario = $this->input->post('usuario');
             $password = md5($this->input->post('password'));
+            $id_proyecto = $this->input->post('proyecto');
            
             //Se usa el modelo para validar los datos ingresados
             $datos_usuario = $this->usuario_model->validar_login($usuario, $password);
@@ -109,7 +110,8 @@ Class Sesion extends CI_Controller{
                         'Usuario' => $datos_usuario->Usuario,
                         'Email' => $datos_usuario->Email,
                         'Permisos' => $permisos,
-                        'Tipo' => $datos_usuario->Tipo
+                        'Tipo' => $datos_usuario->Tipo,
+                        'Fk_Id_Proyecto' => $id_proyecto
                     );
                     
                     //Se cargan los datos a la sesi&oacute;n

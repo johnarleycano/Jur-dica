@@ -6,6 +6,17 @@
  * @copyright	&copy; HATOVIAL S.A.S.
  */
 Class Auditoria_model extends CI_Model{
+     function __construct() {
+        parent::__construct();
+
+        /*
+         * db_configuracion es la conexion a los datos de configuración de la aplicación, como lo son los sectores, vías,
+         * tramos, entre otros.
+         * Esta se llama porque en el archivo database.php la variable ['configuracion']['pconnect] esta marcada como false,
+         * lo que quiere decir que no se conecta persistentemente sino cuando se le invoca, como en esta ocasión.
+         */
+        $this->db_configuracion = $this->load->database('configuracion', TRUE);
+    }
     
     /**
     * Agrega la auditor&iacute;a cuando un usuario intenta ingresar
@@ -365,6 +376,30 @@ Class Auditoria_model extends CI_Model{
         );
         $this->db->insert('auditoria', $auditoria);
     }//Fin generar_acta_recibo()
+
+    /**
+    * Carga los proyectos creados
+    * en la base de datos de configuración
+    *
+    * @access   public
+    */
+    function cargar_proyectos(){
+        return $this->db_configuracion
+            ->order_by("Nombre", "DESC")
+            ->get("proyectos")->result();
+    }//Fin cargar_proyectos()
+
+    /**
+    * Carga los un proyecto específico
+    * en la base de datos de configuración
+    *
+    * @access   public
+    */
+    function cargar_proyecto($id_proyecto){
+        return $this->db_configuracion
+            ->where("Pk_Id", $id_proyecto)
+            ->get("proyectos")->row();
+    }//Fin cargar_proyectos()
 }//Fin auditoria_model
 /* End of file auditoria_model.php */
 /* Location: ./contratos/application/controllers/auditoria_model.php */

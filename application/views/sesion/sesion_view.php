@@ -31,6 +31,18 @@ echo form_open('sesion/validar_login');
                 <tr class="error">
                     <td colspan="2"><?php echo form_error('password'); ?></td>
                 </tr>
+                <tr>
+                    <th><?php echo form_label('Proyecto'); ?></th>
+                    <td>
+                        <div style="alignment-adjust: right">
+                            <select id="select_proyecto" name="proyecto" class="form-control" style="width: 85%;">
+                                <?php foreach ($this->auditoria_model->cargar_proyectos() as $proyecto) { ?>
+                                    <option value="<?php echo $proyecto->Pk_Id; ?>"><?php echo $proyecto->Nombre; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
                 <tr style="alignment-adjust: center">  
                     <td colspan="2">
                         <center><?php echo form_submit(array('name' => 'submit', 'id' => 'submit', 'value' => 'Ingresar')); ?></center><br>
@@ -44,7 +56,7 @@ echo form_open('sesion/validar_login');
         </div>
     </div><!--lateral izquierdo-->
     <div class="grid_1"><hr class="vertical"/></div><!--div central-->
-    <div class="grid_5, titulos_login" align="center">Sistema para la Administracion <br>Juridica</div><!--lateral derecho-->  
+    <div class="grid_5, titulos_login" align="center">Sistema de Administración <br>Jurídica</div><!--lateral derecho-->  
     <center><img src="<?php echo base_url().'img/logo.png'; ?>" style="width: 150px; text-align: center;"></center>
 </div>
 <script type="text/javascript">
@@ -52,6 +64,9 @@ echo form_open('sesion/validar_login');
     $(document).ready(function(){
         //Se establece el foco del campo
         $("#usuario").focus();
+
+        // Se pone el proyecto Devimed por defect
+        $("#select_proyecto").val(1);
     });//Fin document.ready
 </script>
 

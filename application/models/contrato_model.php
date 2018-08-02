@@ -163,12 +163,12 @@ Class Contrato_model extends CI_Model{
         //Esta validaci&oacute;n verifica si llega algun valor en el id, con el
         //fin de filtrar la consulta por un solo id de contrato
         if($id_contrato){
-            $id_contrato = 'WHERE c.Pk_Id_Contrato = '.$id_contrato;
+            $id_contrato = 'AND c.Pk_Id_Contrato = '.$id_contrato;
         }
         
         //Consulta
         $sql = 
-        'SELECT
+        "SELECT
             c.Pk_Id_Contrato,
             c.Numero,
             tbl_terceros.Pk_Id_Terceros,
@@ -208,11 +208,15 @@ Class Contrato_model extends CI_Model{
             c.Fecha_Suspension
         FROM
             contratos AS c
-        INNER JOIN tbl_terceros ON c.Fk_Id_Terceros = tbl_terceros.Pk_Id_Terceros
-        INNER JOIN tbl_estados ON c.Fk_Id_Estado = tbl_estados.Pk_Id_Estado
-        LEFT JOIN tbl_terceros AS p ON c.Fk_Id_Terceros_CentrodeCostos = p.Pk_Id_Terceros
-        LEFT JOIN tbl_terceros AS t ON c.Fk_Id_Terceros_Contratante = t.Pk_Id_Terceros '.
-        $id_contrato;        
+            INNER JOIN tbl_terceros ON c.Fk_Id_Terceros = tbl_terceros.Pk_Id_Terceros
+            INNER JOIN tbl_estados ON c.Fk_Id_Estado = tbl_estados.Pk_Id_Estado
+            LEFT JOIN tbl_terceros AS p ON c.Fk_Id_Terceros_CentrodeCostos = p.Pk_Id_Terceros
+            LEFT JOIN tbl_terceros AS t ON c.Fk_Id_Terceros_Contratante = t.Pk_Id_Terceros
+        WHERE 
+            c.Fk_Id_Proyecto = {$this->session->userdata('Fk_Id_Proyecto')}
+            $id_contrato
+        ";
+
         //Se retorna la consulta
         return $this->db->query($sql)->result();
 

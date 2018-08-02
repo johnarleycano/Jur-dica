@@ -37,7 +37,8 @@ Class Liquidacion_model extends CI_Model{
         LEFT JOIN tbl_estados ON (contratos.Fk_Id_Estado = tbl_estados.Pk_Id_Estado)
         LEFT JOIN tbl_terceros ON tbl_terceros.Pk_Id_Terceros = contratos.Fk_Id_Terceros
         WHERE
-        tbl_estados.Pk_Id_Estado = 2';
+        tbl_estados.Pk_Id_Estado = 2
+        AND contratos.Fk_Id_Proyecto = '.$this->session->userdata('Fk_Id_Proyecto');
         
         //Se retorna la consulta
         return $this->db->query($sql)->result(); 

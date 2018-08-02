@@ -189,7 +189,9 @@ Class Contrato extends CI_Controller{
                 'Fk_Id_Usuario' => $this->session->userdata('Pk_Id_Usuario'),
                 'Fk_Id_Terceros_Contratante' => $this->input->post('contratante'),
                 'Fk_Id_Terceros_CentrodeCostos' => $this->input->post('centro_costo'),
-                'Fk_Id_Terceros' => $id_contratista
+                'Fk_Id_Terceros' => $id_contratista,
+                'Fk_Id_Proyecto' => $this->session->userdata("Fk_Id_Proyecto"),
+
             );
             // print_r($contrato);
             //Estos datos se insertan en la tabla contratos mediante este modelo

@@ -1,4 +1,3 @@
-
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>  
         <title><?php echo $titulo;?></title>
@@ -43,8 +42,14 @@
         <script src="<?php echo base_url(); ?>js/funciones.js"></script>
 
         <div class="container_12">
-            <div id="titulo_logo">Sistema para la <br>Administracion Juridica</div>
-            <center><img src="<?php echo base_url().'img/logo.png'; ?>" style="width: 120px; float: right; margin-right: 20px;"></center>
+            <div id="titulo_logo">Sistema de <br>Administración Jurídica</div>
+
+            <?php
+            $proyecto = $this->auditoria_model->cargar_proyecto($this->session->userdata("Fk_Id_Proyecto"));
+            ?>
+            <center>
+                <img src="<?php echo base_url().'img/'.$proyecto->Logo; ?>" style="width: 120px; float: right; margin-right: 20px;">
+            </center>
             <div>
             <!-- Ventana de mensajes --> 
                 <?php if (isset($mensaje_info)) { ?> 
