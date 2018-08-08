@@ -36,12 +36,16 @@ echo form_open('sesion/validar_login');
                     <td>
                         <div style="alignment-adjust: right">
                             <select id="select_proyecto" name="proyecto" class="form-control" style="width: 85%;">
+                                <option value=""></option>
                                 <?php foreach ($this->auditoria_model->cargar_proyectos() as $proyecto) { ?>
                                     <option value="<?php echo $proyecto->Pk_Id; ?>"><?php echo $proyecto->Nombre; ?></option>
                                 <?php } ?>
                             </select>
                         </div>
                     </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="error"><?php echo form_error('proyecto'); ?></td>
                 </tr>
                 <tr style="alignment-adjust: center">  
                     <td colspan="2">
@@ -55,18 +59,23 @@ echo form_open('sesion/validar_login');
             ?>
         </div>
     </div><!--lateral izquierdo-->
-    <div class="grid_1"><hr class="vertical"/></div><!--div central-->
-    <div class="grid_5, titulos_login" align="center">Sistema de Administración <br>Jurídica</div><!--lateral derecho-->  
-    <center><img src="<?php echo base_url().'img/logo.png'; ?>" style="width: 150px; text-align: center;"></center>
+    <div class="grid_1"><hr class="vertical"/></div>
+    <div class="grid_5, titulos_login" align="center">Sistema de Administración <br>Jurídica</div> 
+    <center>
+        <img style="width: 200px; text-align: center;">
+    </center>
 </div>
 <script type="text/javascript">
     //Cuando el DOM este listo
     $(document).ready(function(){
         //Se establece el foco del campo
-        $("#usuario").focus();
+        $("#usuario").focus()
 
-        // Se pone el proyecto Devimed por defect
-        $("#select_proyecto").val(1);
-    });//Fin document.ready
+        $("#select_proyecto").on("change", function(){
+            proyecto = ajax("<?php echo site_url('sesion/cargar_proyecto') ?>", {"id_proyecto": $(this).val()}, "JSON")
+            
+            $("img").attr("src", `<?php echo base_url(); ?>img/${proyecto.Logo}`)
+        })
+    })
 </script>
 

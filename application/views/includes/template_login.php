@@ -7,11 +7,12 @@
         <![endif]-->
         <?php $this->load->view('includes/header_login'); ?>
         <style type="text/css">
-        body{
-            margin-top: 160px;
-        }
+            body{
+                margin-top: 160px;
+            }
 
-    </style>  
+        </style>  
+        <script src="<?php echo base_url(); ?>js/funciones.js"></script>
     </head>
     <body>
         <div class="container_12">

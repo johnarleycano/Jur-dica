@@ -53,9 +53,10 @@ Class Sesion extends CI_Controller{
          */
         $this->form_validation->set_rules('usuario', 'nombre de usuario', 'required');
         $this->form_validation->set_rules('password', 'contrase&ntilde;a', 'required|min_length[4]');
+        $this->form_validation->set_rules('proyecto', 'proyecto', 'required');
         
         //Mensajes que se muestran cuando no se supera la validaci&oacute;n
-        $this->form_validation->set_message('required', 'Este campo es obligatorio');
+        $this->form_validation->set_message('required', 'El campo <b>%s</b> es obligatorio');
         $this->form_validation->set_message('min_length', 'El campo %s debe tener como m&iacute;nimo 4 caracteres');
         
         /*
@@ -150,6 +151,10 @@ Class Sesion extends CI_Controller{
         //Se redirecciona al controlador de inicio
         redirect('');
     }//Fin cerrar_sesion()
+
+    function cargar_proyecto(){
+        print json_encode($this->auditoria_model->cargar_proyecto($this->input->post("id_proyecto")));
+    }
 }//Fin Sesion
 /* End of file sesion.php */
 /* Location: ./contratos/application/controllers/sesion.php */

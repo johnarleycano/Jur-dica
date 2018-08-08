@@ -44,9 +44,9 @@
         <div class="container_12">
             <div id="titulo_logo">Sistema de <br>Administración Jurídica</div>
 
-            <?php
-            $proyecto = $this->auditoria_model->cargar_proyecto($this->session->userdata("Fk_Id_Proyecto"));
-            ?>
+            <!-- Datos del proyecto -->
+            <?php $proyecto = $this->auditoria_model->cargar_proyecto($this->session->userdata("Fk_Id_Proyecto")); ?>
+            
             <center>
                 <img src="<?php echo base_url().'img/'.$proyecto->Logo; ?>" style="width: 120px; float: right; margin-right: 20px;">
             </center>
