@@ -12,8 +12,8 @@ $objPHPExcel = new PHPExcel();
 
 //Se establecen las propiedades del documento
 $objPHPExcel->getProperties()
-    ->setCreator('John Arley Cano - Hatovial S.A.S.')
-    ->setLastModifiedBy('John Arley Cano - Hatovial S.A.S.')
+    ->setCreator('John Arley Cano - Devimed S.A.')
+    ->setLastModifiedBy('John Arley Cano - Devimed S.A.')
     ->setTitle('Contratos por fecha inicial')
     ->setSubject("Contratos filtrados por la fecha inicial")
     ->setDescription("Listado de contratos existentes a la fecha seg&uacute;n el rango de fechas seleccionado")

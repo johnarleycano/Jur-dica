@@ -14,12 +14,12 @@ $PHPWord = new PHPWord();
 $PHPWord->setDefaultFontName('Arial');
 $PHPWord->setDefaultFontSize(11);
 $properties = $PHPWord->getProperties();
-$properties->setCreator('carlos florez'); 
+$properties->setCreator('John Arley Cano Salinas'); 
 $properties->setCompany('Devimed S.A');
 $properties->setTitle('Acta de inicio');
 $properties->setDescription('Acta de inicio de obra'); 
 $properties->setCategory('informe');
-$properties->setLastModifiedBy('carlos florez');
+$properties->setLastModifiedBy('John Arley Cano Salinas');
 
 /**
  * Estilos de alineación

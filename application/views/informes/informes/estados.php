@@ -10,8 +10,8 @@ $objPHPExcel = new PHPExcel();
 
 //Se establecen las propiedades del documento
 $objPHPExcel->getProperties()
-    ->setCreator('cf')
-    ->setLastModifiedBy('cf')
+    ->setCreator('John Arley Cano Salinas')
+    ->setLastModifiedBy('John Arley Cano Salinas')
     ->setTitle('Contratos por estado')
     ->setSubject("Contratos filtrados por un estado")
     ->setDescription("Listado de contratos existentes a la fecha seg&uacute;n con un estado definido")

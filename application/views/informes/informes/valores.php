@@ -10,7 +10,6 @@ $pdf = new FPDF();
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->SetAuthor('John Arley Cano - Hatovial S.A.S.');
-$pdf->SetTitle('John Arley Cano - Hatovial S.A.S.');
 $pdf->SetCreator('John Arley Cano - Hatovial S.A.S.');
 
 //Cabecera

@@ -7,8 +7,8 @@ $objPHPExcel = new PHPExcel();
 
 //Se establecen las propiedades del documento
 $objPHPExcel->getProperties()
-    ->setCreator('CF')
-    ->setLastModifiedBy('CF')
+    ->setCreator('John Arley Cano Salinas')
+    ->setLastModifiedBy('John Arley Cano Salinas')
     ->setTitle('Contratos sin acta de inicio')
     ->setSubject("Contratos que no tienen acta de inicio")
     ->setDescription("Listado de contratos que a la fecha no tienen acta de inicio")

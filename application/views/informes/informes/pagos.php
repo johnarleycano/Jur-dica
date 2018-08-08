@@ -5,7 +5,7 @@ $objPHPExcel = new PHPExcel();
 //Se establece la configuracion general
 $objPHPExcel->getProperties()
     ->setCreator("Luis David Moreno Lopera - Hatovial S.A.S.")
-    ->setLastModifiedBy("Luis David Moreno Lopera")
+    ->setLastModifiedBy("John Arley Cano Salinas - Devimed S.A.")
     ->setTitle("Sistema de Gestión de Contratos - Generado el ".$this->auditoria_model->formato_fecha(date('Y-m-d')).' - '.date('h:i A'))
     ->setSubject("Contratos categorizados por subcontratista")
     ->setDescription("Pagos a contrato")

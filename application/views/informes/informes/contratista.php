@@ -8,9 +8,8 @@
  */
 $pdf = new PDF_Diag('L','mm','Legal');
 $pdf->AddPage();
-$pdf->SetAuthor('John Arley Cano - Hatovial S.A.S.');
-$pdf->SetTitle('John Arley Cano - Hatovial S.A.S.');
-$pdf->SetCreator('John Arley Cano - Hatovial S.A.S.');
+$pdf->SetAuthor('John Arley Cano Salinas - Devimed S.A.');
+$pdf->SetCreator('John Arley Cano Salinas - Devimed S.A.');
 $pdf->SetMargins(5, 5, 5, 5);
 
 //Cabecera

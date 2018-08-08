@@ -13,24 +13,27 @@ Class Informes_model extends CI_Model{
     */
     function contratos_por_estado($id_estado){
         $sql =
-        'SELECT
-        contratos.contratos.Numero,
-        contratos.contratos.Objeto,
-        contratos.contratos.Lugar,
-        contratos.contratos.Valor_Inicial,
-        contratos.contratos.Acta_Inicio,
-        contratos.contratos.Fecha_Acta_Inicio,
-        contratos.contratos.Plazo,
-        contratos.contratos.Fecha_Vencimiento,
-        contratos.contratos.Fecha_Inicial,
-        contratos.tbl_terceros.Nombre AS Contratista,
-        contratos.tbl_estados.Estado
+        "SELECT
+            c.Numero,
+            c.Objeto,
+            c.Lugar,
+            c.Valor_Inicial,
+            c.Acta_Inicio,
+            c.Fecha_Acta_Inicio,
+            c.Plazo,
+            c.Fecha_Vencimiento,
+            c.Fecha_Inicial,
+            t.Nombre AS Contratista,
+            e.Estado 
         FROM
-        contratos.contratos
-        INNER JOIN contratos.tbl_terceros ON contratos.contratos.Fk_Id_Terceros = contratos.tbl_terceros.Pk_Id_Terceros
-        INNER JOIN contratos.tbl_estados ON contratos.contratos.Fk_Id_Estado = contratos.tbl_estados.Pk_Id_Estado
+            contratos AS c
+            INNER JOIN tbl_terceros AS t ON c.Fk_Id_Terceros = t.Pk_Id_Terceros
+            INNER JOIN tbl_estados AS e ON c.Fk_Id_Estado = e.Pk_Id_Estado 
         WHERE
-        contratos.contratos.Fk_Id_Estado = '.$id_estado.' ORDER BY contratos.contratos.Numero ASC';
+            c.Fk_Id_Estado = $id_estado 
+            AND c.Fk_Id_Proyecto = {$this->session->userdata('Fk_Id_Proyecto')} 
+        ORDER BY
+            c.Numero ASC";
         
         //Se retorna la consulta
         return $this->db->query($sql)->result();
@@ -44,26 +47,27 @@ Class Informes_model extends CI_Model{
     function contratos_por_fecha_inicial($fecha, $fecha1, $fecha2){
         $sql =
         "SELECT
-            contratos.contratos.Numero,
-            contratos.contratos.Objeto,
-            contratos.contratos.Lugar,
-            contratos.contratos.Acta_Inicio,
-            contratos.contratos.Fecha_Acta_Inicio,
-            contratos.contratos.Fecha_Vencimiento,
-            contratos.contratos.Plazo,
-            contratos.contratos.Valor_Inicial,
-            contratos.tbl_estados.Estado,
-            contratos.tbl_terceros.Nombre AS Contratista,
-            contratos.contratos.Fecha_Inicial
+            c.Numero,
+            c.Objeto,
+            c.Lugar,
+            c.Acta_Inicio,
+            c.Fecha_Acta_Inicio,
+            c.Fecha_Vencimiento,
+            c.Plazo,
+            c.Valor_Inicial,
+            e.Estado,
+            t.Nombre AS Contratista,
+            c.Fecha_Inicial 
         FROM
-            contratos.contratos
-            INNER JOIN contratos.tbl_terceros ON contratos.contratos.Fk_Id_Terceros = contratos.tbl_terceros.Pk_Id_Terceros
-            INNER JOIN contratos.tbl_estados ON contratos.contratos.Fk_Id_Estado = contratos.tbl_estados.Pk_Id_Estado
+            contratos AS c
+            INNER JOIN tbl_terceros AS t ON c.Fk_Id_Terceros = t.Pk_Id_Terceros
+            INNER JOIN tbl_estados AS e ON c.Fk_Id_Estado = e.Pk_Id_Estado 
         WHERE
-            contratos.".$fecha." BETWEEN '".$fecha1."' AND '".$fecha2."
+            c.$fecha BETWEEN '$fecha1' AND '$fecha2' 
+            AND c.Fk_Id_Proyecto = {$this->session->userdata('Fk_Id_Proyecto')} 
         ORDER BY
-            contratos.contratos.Numero ASC'";
-        
+            c.Numero ASC";
+
         //Se retorna la consulta
         return $this->db->query($sql)->result();
     }//Fin contratos_por_fecha_inicial()
@@ -79,12 +83,12 @@ Class Informes_model extends CI_Model{
         
         // Si viene algun dato y es contratista
         if ($tipo == "contratista" && $id != "") {
-            $contratista = "WHERE c.Fk_Id_Terceros = {$id}";
+            $contratista = "AND c.Fk_Id_Terceros = {$id}";
         }
         
         // Si viene algun dato y es contratista
         if ($tipo == "contratante" && $id != "") {
-            $contratista = "WHERE c.Fk_Id_Terceros_Contratante = {$id}";
+            $contratista = "AND c.Fk_Id_Terceros_Contratante = {$id}";
         }
 
         $sql =
@@ -136,6 +140,7 @@ Class Informes_model extends CI_Model{
         LEFT JOIN tbl_estados ON c.Fk_Id_Estado = tbl_estados.Pk_Id_Estado
         LEFT JOIN tbl_terceros AS tc ON c.Fk_Id_Terceros_Contratante = tc.Pk_Id_Terceros
         INNER JOIN tbl_terceros AS tcc ON tcc.Pk_Id_Terceros = c.Fk_Id_Terceros_CentrodeCostos
+        WHERE c.Fk_Id_Proyecto = {$this->session->userdata('Fk_Id_Proyecto')}
         {$contratista}
         ORDER BY
             c.Fk_Id_Estado ASC,
@@ -234,6 +239,7 @@ Class Informes_model extends CI_Model{
         WHERE
             c.Acta_Inicio IS FALSE 
             AND e.Pk_Id_Estado <> 2 
+            AND c.Fk_Id_Proyecto = {$this->session->userdata('Fk_Id_Proyecto')}
         ORDER BY
             Numero ASC";
         
