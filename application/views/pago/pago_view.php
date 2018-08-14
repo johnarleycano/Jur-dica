@@ -124,11 +124,14 @@ echo form_hidden('id_contrato', $id_contrato);
             <td style="text-align: left"><?php echo $pago->Numero_Factura; ?></td>
             <td style="text-align: right"><?php echo '$ '.number_format($pago->Valor_Pago, 0, '', '.'); ?></td>
             <td style="text-align: right"><?php echo '$ '.number_format($pago->Valor_Retenido, 0, '', '.'); ?></td>
-            <?php if($this->session->userdata('Tipo') == TRUE){ ?>
-            <td style="text-align: right"><?php echo anchor(site_url("pago/eliminar/".$pago->Pk_Id_Contratos_Pagos."/".$pago->Pk_Id_Contrato), img(array('src' => 'img/borrar.png', 'title' => 'Eliminar pago', 'width' => '25', 'height' => '25'))); ?></td>
-            <?php }else{ ?>
-            <td></td>
-            <?php } ?>
+            <td style="text-align: right">
+                <?php
+                // Si tiene permisos
+                if (isset($permisos[10])) {
+                    echo anchor(site_url("pago/eliminar/{$pago->Pk_Id_Contratos_Pagos}/{$pago->Pk_Id_Contrato}"), img(array('src' => 'img/borrar.png', 'title' => 'Eliminar pago', 'width' => '25', 'height' => '25')));
+                        
+                } ?>
+            </td>
         </tr>
         <?php
         $numero_pago++;
