@@ -361,6 +361,7 @@ echo form_open('actualizar/contrato/'.$contrato->Pk_Id_Contrato);
                     <th class="right">Otros&iacute;</th>
                     <th class="right"><?php echo form_label('Valor', 'valor_adicion'); ?></th>
                     <th class="right"><?php echo form_label('Plazo (d&iacute;as)', 'plazo_adicion'); ?></th>
+                    <th class="right"><?php echo form_label('Observaci&oacute;n', 'observacion_adicion'); ?></th>
                 </thead>
                 <?php
                 $plazo_adiciones = 0;
@@ -372,6 +373,7 @@ echo form_open('actualizar/contrato/'.$contrato->Pk_Id_Contrato);
                     <td class="right"><?php echo $num; ?></td>
                     <td class="right"><?php echo '$ '.number_format($adicion->Valor, 0, '', '.'); ?></td>
                     <td class="right"><?php echo $adicion->Plazo; ?></td>
+                    <td class="right"><?php echo $adicion->Observacion; ?></td>
                 </tr>
                 <?php
                 $num++;
@@ -384,6 +386,8 @@ echo form_open('actualizar/contrato/'.$contrato->Pk_Id_Contrato);
                     <td class="right"><?php echo form_input(array('name' => 'valor_adicion', 'id' => 'valor_adicion', 'style' => 'text-align:right', 'value' => set_value('valor_adicion'))); ?>
                     </td>
                     <td class="right"><?php echo form_input(array('name' => 'plazo_adicion', 'id' => 'plazo_adicion', 'style' => 'text-align:right', 'value' => set_value('plazo_adicion'))); ?>
+                    </td>
+                    <td class="right"><?php echo form_input(array('name' => 'observacion_adicion', 'id' => 'observacion_adicion', 'value' => set_value('observacion_adicion'))); ?>
                     </td>
                 </tr>
             </table>

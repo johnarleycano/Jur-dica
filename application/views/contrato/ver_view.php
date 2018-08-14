@@ -108,9 +108,10 @@ foreach ($contratos as $contrato):
                 <h3>Adiciones al contrato</h3><br>
                 <table width="50%">
                     <thead>
-                        <th>Otros&iacute;</th>
-                        <th>Valor</th>
-                        <th>Plazo (d&iacute;as)</th>
+                        <th><b>Otros&iacute;</b></th>
+                        <th><b>Valor</b></th>
+                        <th><b>Plazo (d&iacute;as)</b></th>
+                        <th><b>Observaci&oacute;n</b></th>
                     </thead>
                     <?php
                     $num = 1;
@@ -120,6 +121,7 @@ foreach ($contratos as $contrato):
                         <td width="5%" class="right"><p><?php echo $num; ?></p></td>
                         <td class="right"><p><?php echo '$ '.number_format($adicion->Valor, 0, '', '.'); ?></p></td>
                         <td class="right"><p><?php echo $adicion->Plazo; ?></p></td>
+                        <td class="right"><p><?php echo $adicion->Observacion; ?></p></td>
                     </tr>
                     <?php
                     $num++;

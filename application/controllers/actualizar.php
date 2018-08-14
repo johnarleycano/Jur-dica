@@ -290,11 +290,12 @@ Class Actualizar extends CI_Controller{
             );
 
             //Se toman los datos para agregar la adicion
-            if ($this->input->post('valor_adicion') || $this->input->post('plazo_adicion')) {
+            if ($this->input->post('valor_adicion') || $this->input->post('plazo_adicion') || $this->input->post('observacion_adicion')) {
                 $adicion = array(
                     'Valor' => $this->input->post('valor_adicion'),
                     'Plazo' => $this->input->post('plazo_adicion'),
-                    'Fk_Id_Contrato' => $id_contrato
+                    'Fk_Id_Contrato' => $id_contrato,
+                    'Observacion' => $this->input->post('observacion_adicion'),
                 );
 
                 //Se inserta en la base de datos la nueva adicion
