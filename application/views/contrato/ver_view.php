@@ -103,7 +103,7 @@ foreach ($contratos as $contrato):
         </div>
 
         <!-- Adiciones -->
-        <?php if($contrato->Valor_Inicial != $valor_total || $contrato->Plazo_Inicial != $plazo_total){ ?>
+        <?php if(count($adiciones) > 0){ ?>
             <div class="info_contrato adiciones">
                 <h3>Adiciones al contrato</h3><br>
                 <table width="50%">
